@@ -20,3 +20,19 @@ Read the DEVELOPER NOTES found in the code to understand the application
 and where you will need to make adjustments/changes as well as some 
 suggestions for best practices.
 
+Usage Examples:
+-----------
+
+To start the sample in Docker :
+
+1. go to the base directory of the repo
+2. start.sh docker
+
+To start the sample in native OS (e.g. Linux) :
+
+1. go to the base directory of the repo
+2. start.sh native
+
+To stop the sample:
+
+Both ways of starting the sample are running the sample in fore ground, logging and tracing from both client and server components are on stdout of the command window, to stop the sample, press Ctl + C, which will terminate both the client and server components.
