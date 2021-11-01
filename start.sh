@@ -46,21 +46,21 @@ CONFIG_FILE="server/src/configs/config.ts"
 # check env settings and config are properly set and provisioned at expected locations
 if [ -f "${ENV_SETTINGS}" ]
 then
-    echo_msg
-    echo_msg "Development env file found at: ${ENV_SETTINGS}"
+    echo
+    echo "Development env file found at: ${ENV_SETTINGS}"
 else
-    echo_msg
-    echo_msg "ERROR: The development env file not found, please following README to copy it from sample and customize it if needed."
+    echo
+    echo "ERROR: The development env file not found, please following README to copy it from sample and customize it if needed."
     exit 1
 fi
 
 if [ -f "${CONFIG_FILE}" ]
 then
-    echo_msg
-    echo_msg "BB2 App config found at: ${CONFIG_FILE}"
+    echo
+    echo "BB2 App config found at: ${CONFIG_FILE}"
 else
-    echo_msg
-    echo_msg "ERROR: The BB2 App config file not found, please following README to copy it from sample and customize it if needed."
+    echo
+    echo "ERROR: The BB2 App config file not found, please following README to copy it from sample and customize it if needed."
     exit 1
 fi
 
@@ -75,20 +75,20 @@ then
 else
     if which parallel
     then
-        echo_msg "GNU parallel is found and used to start both client and server components in foreground..."
+        echo "GNU parallel is found and used to start both client and server components in foreground..."
         echo "Starting the server and client components in native OS in foreground, type Ctrl C to terminate both the client and server components."
         yarn --cwd client install
         yarn --cwd server install
         parallel --line-buffer --tag ::: 'yarn --cwd server start:dev' 'yarn --cwd client start2'
     else
-        echo_msg "GNU parallel is NOT FOUND, starting server component here in foreground, and the client can be started in separate command window:"
-        echo_msg "by running below command: "
-        echo_msg "yarn --cwd client start2"
-        echo_msg ""
-        echo_msg ""
+        echo "GNU parallel is NOT FOUND, starting server component here in foreground, and the client can be started in separate command window:"
+        echo "by running below command: "
+        echo "yarn --cwd client start2"
+        echo ""
+        echo ""
         echo "Starting the server component in native OS in foreground, type Ctrl C to terminate the server component."
-        echo_msg ""
-        echo_msg ""
+        echo ""
+        echo ""
         yarn --cwd server install
         yarn --cwd server start:dev
     fi
