@@ -20,7 +20,7 @@ Read the DEVELOPER NOTES found in the code to understand the application
 and where you will need to make adjustments/changes as well as some 
 suggestions for best practices.
 
-Usage Examples:
+Usage Examples
 -----------
 
 To start the sample in Docker :
