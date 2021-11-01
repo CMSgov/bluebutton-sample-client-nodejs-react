@@ -73,8 +73,23 @@ then
     echo "service : client - the front end, service : server - the application), type Ctrl C to terminate the sample"
     docker-compose up
 else
-    echo "Starting the server and client components in native OS in foreground, type Ctrl C to terminate both the client and server components."
-    yarn --cwd client install
-    yarn --cwd server install
-    parallel --line-buffer --tag ::: 'yarn --cwd server start:dev' 'yarn --cwd client start2'
+    if which parallel
+    then
+        echo_msg "GNU parallel is found and used to start both client and server components in foreground..."
+        echo "Starting the server and client components in native OS in foreground, type Ctrl C to terminate both the client and server components."
+        yarn --cwd client install
+        yarn --cwd server install
+        parallel --line-buffer --tag ::: 'yarn --cwd server start:dev' 'yarn --cwd client start2'
+    else
+        echo_msg "GNU parallel is NOT FOUND, starting server component here in foreground, and the client can be started in separate command window:"
+        echo_msg "by running below command: "
+        echo_msg "yarn --cwd client start2"
+        echo_msg ""
+        echo_msg ""
+        echo "Starting the server component in native OS in foreground, type Ctrl C to terminate the server component."
+        echo_msg ""
+        echo_msg ""
+        yarn --cwd server install
+        yarn --cwd server start:dev
+    fi
 fi
