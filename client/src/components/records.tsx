@@ -44,6 +44,7 @@ export default function Records({ }) {
             });
     }, [])
 
+    // TODO: add page navigation for bundle
     return (
         <div className='full-width-card'>
             <Table className="ds-u-margin-top--2" stackable stackableBreakpoint="md">
