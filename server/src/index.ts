@@ -1,7 +1,11 @@
 import './pre-start'; // Must be the first import
 import app from '@server';
 import logger from '@shared/Logger';
+import { schedule } from './utils/retry';
 
+// start retry cron job
+logger.info('Schedule retry cron job...');
+schedule();
 
 // Start the server
 /* DEVELOPER NOTE:

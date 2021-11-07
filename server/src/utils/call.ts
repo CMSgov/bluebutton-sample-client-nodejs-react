@@ -1,12 +1,14 @@
 import axios from 'axios';
 import FormData from 'form-data';
+import { try_later } from './queue';
+import { is_retryable } from './retry';
 
 export async function endpointPost(endpoint_url: string, data: FormData, extra: any) {
     return await httpCall({ 
         method: 'post',
         url: endpoint_url,
         data: data,
-        headers: extra});
+        headers: extra}, true);
 }
 
 export async function endpointGet(endpoint_url: string, req_qry: any, token: string) {
@@ -16,10 +18,10 @@ export async function endpointGet(endpoint_url: string, req_qry: any, token: str
         params: req_qry,
         headers: {
             'Authorization': `Bearer ${token}`
-        }});
+        }}, true);
 }
 
-async function httpCall(config: any) {
+export async function httpCall(config: any, retry_flag: boolean) {
     var resp = null
     try {
         resp = await axios(config);
@@ -37,10 +39,9 @@ async function httpCall(config: any) {
             console.log(">>>>>>>>>>>>>>>>>>>>>>>>")
             // DEVELOPER NOTES:
             // check for retryable (500) errors and enqueue it for retry
-            if (error.response.status === 500) {
-                if (error.message) {
-
-                }
+            if (retry_flag && is_retryable(error)) {
+                try_later(error);
+                console.log("Request failed and is retryable, saved for retry later.")
             }
         }
         else if (error.request) {
