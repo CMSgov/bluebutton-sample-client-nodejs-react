@@ -49,7 +49,7 @@ export async function do_retry() {
                 break;
             }
             else if (r.tried()) {
-                // max not reached yet
+                // max not reached yet (not expired)
                 RetryableRequests.enQ(r);
             }
         }

@@ -31,16 +31,18 @@ export default function Records({ }) {
             .then(res => {
                 return res.json();
             }).then(eobData => {
-                const records: EOBRecord[] = eobData.entry.map((resourceData: any) => {
-                    const resource = resourceData.resource;
-                    return {
-                        id: resource.id,
-                        code: resource.item[0]?.productOrService?.coding[0]?.code || 'Unknown',
-                        display: resource.item[0]?.productOrService?.coding[0]?.display || 'Unknown Prescription Drug',
-                        amount: resource.item[0]?.adjudication[7]?.amount?.value || '0'
-                    }
-                });
-                setRecords(records);
+                if (eobData && eobData.entry) {
+                    const records: EOBRecord[] = eobData.entry.map((resourceData: any) => {
+                        const resource = resourceData.resource;
+                        return {
+                            id: resource.id,
+                            code: resource.item[0]?.productOrService?.coding[0]?.code || 'Unknown',
+                            display: resource.item[0]?.productOrService?.coding[0]?.display || 'Unknown Prescription Drug',
+                            amount: resource.item[0]?.adjudication[7]?.amount?.value || '0'
+                        }
+                    });
+                    setRecords(records);
+                }
             });
     }, [])
 
