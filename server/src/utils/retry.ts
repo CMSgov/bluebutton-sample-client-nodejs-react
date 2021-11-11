@@ -1,5 +1,6 @@
 import * as cron from 'node-cron'
 import { do_retry } from './queue';
+import logger from '@shared/Logger';
 
 // schedule cron job
 export function schedule() {
@@ -40,22 +41,17 @@ export default class Retryable {
             // hard code back off by minutes
             var next_retry_time = new Date(this.created.getTime() + (60000 * (2 ** this.count)))
             var current_time = new Date()
-            console.log("next retry at: ", next_retry_time, ", current time: ", current_time)
             is_ready = current_time > next_retry_time;
-            console.log("is_ready: ", is_ready)
         }
         return is_ready;
     }
 
     tried() {
-        console.log("count=", this.count)
         this.count=this.count + 1;
-        console.log("after count=", this.count)
         return !this.expired();
     }
 
     expired() {
-        console.log("expired ? max=", this.max, ", count=", this.count, " max = count? :", (this.max - this.count) === 0)
         return (this.max - this.count) === 0;
     }
 }

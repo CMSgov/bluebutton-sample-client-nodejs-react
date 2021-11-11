@@ -31,7 +31,6 @@ export default class Retryables<T> implements IQueue<T> {
 const RetryableRequests = new Retryables<Retryable>();
 
 export function try_later(item: any) {
-    console.log("try_later() called: ", item)
     RetryableRequests.enQ(new Retryable(item, 3));
 }
 

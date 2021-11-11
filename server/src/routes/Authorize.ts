@@ -6,7 +6,7 @@ import db from '../utils/db';
 import { getAccessToken, generateAuthorizeUrl } from '../utils/bb2';
 import { getBenefitData } from './Data';
 import { getLoggedInUser } from 'src/utils/user';
-
+import logger from '@shared/Logger';
 
 export async function authorizationCallback(req: Request, res: Response) {
     try {
@@ -52,6 +52,7 @@ export async function authorizationCallback(req: Request, res: Response) {
         * to display or store the error
          */
         console.log(e);
+        logger.info(e)
     }
         /* DEVELOPER NOTE:
          * This is a hardcoded redirect, but this should be used from settings stored in a conf file
