@@ -8,7 +8,7 @@ export type EOBRecord = {
     amount: number
 }
 
-export default function Records({ }) {
+export default function Records() {
     const [records, setRecords] = useState<EOBRecord[]>([]);
     /*
     * DEVELOPER NOTES:

@@ -1,19 +1,17 @@
 import axios from 'axios';
 import FormData from 'form-data';
-import { try_later } from './queue';
-import { is_retryable } from './retry';
 import logger from '@shared/Logger';
 
-export async function endpointPost(endpoint_url: string, data: FormData, extra: any) {
-    return await httpCall({ 
+export async function post(endpoint_url: string, data: FormData, extra: any) {
+    return await request({ 
         method: 'post',
         url: endpoint_url,
         data: data,
         headers: extra}, true);
 }
 
-export async function endpointGet(endpoint_url: string, req_qry: any, token: string) {
-    return await httpCall({ 
+export async function get(endpoint_url: string, req_qry: any, token: string) {
+    return await request({ 
         method: 'get',
         url: endpoint_url,
         params: req_qry,
@@ -22,7 +20,7 @@ export async function endpointGet(endpoint_url: string, req_qry: any, token: str
         }}, true);
 }
 
-export async function httpCall(config: any, retry_flag: boolean) {
+export async function request(config: any, retry_flag: boolean) {
     var resp = null
     try {
         resp = await axios(config);
@@ -39,7 +37,7 @@ export async function httpCall(config: any, retry_flag: boolean) {
             // DEVELOPER NOTES:
             // check for retryable (500) errors and enqueue it for retry
             if (retry_flag && is_retryable(error)) {
-                try_later(error);
+                // try_later(error);
                 logger.info("Request failed and is retryable, saved for retry later.")
             }
         }
@@ -59,4 +57,13 @@ export async function httpCall(config: any, retry_flag: boolean) {
         logger.info(error.config);
     }
     return resp    
+}
+
+function is_retryable(error: any) {
+    if (error.response && error.response.status === 500) {
+        if (error.request.path && error.request.path.match("^/v[12]/fhir/.*")) {
+            return true;
+        }
+    }
+    return false;
 }

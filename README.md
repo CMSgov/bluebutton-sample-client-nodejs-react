@@ -63,12 +63,7 @@ Usage Examples
 To start the sample in Docker :
 
 1. go to the base directory of the repo
-2. start.sh docker
-
-To start the sample in native OS (e.g. Linux) :
-
-1. go to the base directory of the repo
-2. start.sh native
+2. docker-compose up
 
 To start the sample in native OS (e.g. Linux) with server and client components started in separate windows :
 

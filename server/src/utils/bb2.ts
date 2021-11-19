@@ -3,7 +3,7 @@ import FormData from 'form-data';
 import db from './db';
 import config from '../configs/config';
 import { generateCodeChallenge, generateRandomState } from './generatePKCE';
-import { endpointPost } from './call'
+import { post } from './call'
 
 export function generateAuthorizeUrl(): string {
     const envConfig = config[db.settings.env];
@@ -33,7 +33,6 @@ export async function getAccessToken(code: string, state: string | undefined) {
     const envConfig = config[db.settings.env];
 
     const BB2_ACCESS_TOKEN_URL = envConfig.bb2BaseUrl + '/' + db.settings.version + '/o/token/';
-    // const BB2_ACCESS_TOKEN_URL = 'http://host.docker.internal:8000/' + db.settings.version + '/o/token/';
     
     const form = new FormData();
     form.append('client_id', envConfig.bb2ClientId);
@@ -48,5 +47,5 @@ export async function getAccessToken(code: string, state: string | undefined) {
         form.append('code_challenge', codeChallenge.codeChallenge);
     }
 
-    return await endpointPost(BB2_ACCESS_TOKEN_URL, form, form.getHeaders());    
+    return await post(BB2_ACCESS_TOKEN_URL, form, form.getHeaders());    
 }
