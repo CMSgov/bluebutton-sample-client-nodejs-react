@@ -3,7 +3,7 @@ import FormData from 'form-data';
 import db from './db';
 import config from '../configs/config';
 import { generateCodeChallenge, generateRandomState } from './generatePKCE';
-import { post } from './call'
+import { post } from './request'
 
 export function generateAuthorizeUrl(): string {
     const envConfig = config[db.settings.env];
