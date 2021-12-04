@@ -10,18 +10,18 @@ export async function post(endpoint_url: string, data: FormData, extra: any) {
         headers: extra}, true);
 }
 
-export async function get(endpoint_url: string, req_qry: any, token: string) {
+export async function get(endpointUrl: string, params: any, authToken: string) {
     return await request({ 
         method: 'get',
-        url: endpoint_url,
-        params: req_qry,
+        url: endpointUrl,
+        params: params,
         headers: {
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${authToken}`
         }}, true);
 }
 
-export async function request(config: any, retry_flag: boolean) {
-    var resp = null
+export async function request(config: any, retryFlag: boolean) {
+    let resp = null
     try {
         resp = await axios(config);
     } catch (error: any) {
@@ -33,7 +33,7 @@ export async function request(config: any, retry_flag: boolean) {
             console.log("response text: " + error.response.data)
             // DEVELOPER NOTES:
             // check for retryable (e.g. 500 & fhir) errors and do retrying...
-            if (retry_flag && is_retryable(error)) {
+            if (retryFlag && isRetryable(error)) {
                 console.log("Request failed and is retryable, entering retry process...")
                 var retry_resp = await do_retry(config)
                 if (retry_resp) {
@@ -57,7 +57,7 @@ export async function request(config: any, retry_flag: boolean) {
     return resp    
 }
 
-function is_retryable(error: any) {
+function isRetryable(error: any) {
     if (error.response && error.response.status === 500) {
         if (error.request.path && error.request.path.match("^/v[12]/fhir/.*")) {
             return true;
@@ -93,9 +93,9 @@ async function do_retry(config: any) {
     return resp
 }
 
-function sleep(ms: any) {
+function sleep(time: number) {
     return new Promise((resolve) => {
-      setTimeout(resolve, ms);
+      setTimeout(resolve, time);
     });
 }
   

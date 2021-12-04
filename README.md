@@ -73,7 +73,7 @@ To start the sample in native OS (e.g. Linux) with server and client components 
    2. yarn --cwd server start:dev 
 3. run below to start the client:
    1. yarn --cwd client install
-   2. yarn --cwd client start2
+   2. yarn --cwd client start-native
 
 To stop the sample:
 
