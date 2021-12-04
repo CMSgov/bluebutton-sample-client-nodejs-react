@@ -1,6 +1,5 @@
 import axios from 'axios';
 import FormData from 'form-data';
-import logger from '@shared/Logger';
 
 export async function post(endpoint_url: string, data: FormData, extra: any) {
     return await request({ 

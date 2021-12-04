@@ -1,4 +1,3 @@
-import StatusCodes from 'http-status-codes';
 import { Router, Request, Response } from 'express';
 import AuthorizationToken from '../entities/AuthorizationToken';
 import Settings from '../entities/Settings';
