@@ -35,7 +35,8 @@ This document serves as a supplementary to Blue Button 2.0 API Developer Documen
 
 ### Retry
 
-App can choose to retry the requests on certain 500 errors heuristically depending on the root cause as indicated by the error messages, e.g. backend server is unavailable due to temporarily network down etc., the app can choose from various retry patterns that best fits the use case (e.g. exponential back off).
+
+
 
 Auto retrying on FHIR Data read/search to overcome a FHIR backend network temporary downtime is recommended, but with sensible retry settings.
 
