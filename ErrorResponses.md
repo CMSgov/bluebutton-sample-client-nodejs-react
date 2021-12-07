@@ -39,4 +39,5 @@ App can choose to retry the requests on certain 500 errors heuristically dependi
 
 Auto retrying on FHIR Data read/search to overcome a FHIR backend network temporary downtime is recommended, but with sensible retry settings.
 
-Due to the involvement of end user (beneficiary), auto retrying on requests in an authorization flow does not seem practical, hence not recommended.
+Due to the involvement of the end user (beneficiary), auto retrying requests in the authorization flow are not recommended.
+
