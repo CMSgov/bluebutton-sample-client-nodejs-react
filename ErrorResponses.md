@@ -2,7 +2,8 @@
 
 ## Overview
 
-This document serves as a supplementary to Blue Button 2.0 API Developer Documents, it gives more details on most commonly error responses and recommended error handling on the client side, e.g. guide lines on retrying the requests on certain errors.
+This document serves as a supplementary to Blue Button 2.0 API Developer Documents. It gives more details on the most common error responses and how to properly handle them.
+
 
 ## Error Responses and Client Actions
 
