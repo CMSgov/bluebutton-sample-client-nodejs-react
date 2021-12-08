@@ -38,7 +38,8 @@ This document serves as a supplementary to Blue Button 2.0 API Developer Documen
 
 
 
-Auto retrying on FHIR Data read/search to overcome a FHIR backend network temporary downtime is recommended, but with sensible retry settings.
+Auto retrying (with sensible retry settings) on FHIR Data read/search to overcome a FHIR backend network temporary downtime is recommended.
+
 
 Due to the involvement of the end user (beneficiary), auto retrying requests in the authorization flow are not recommended.
 
