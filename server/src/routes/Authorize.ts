@@ -5,11 +5,21 @@ import Settings from '../entities/Settings';
 import db from '../utils/db';
 import { getAccessToken, generateAuthorizeUrl } from '../utils/bb2';
 import { getBenefitData } from './Data';
-import { getLoggedInUser } from 'src/utils/user';
+import { clearBB2Data, getLoggedInUser } from 'src/utils/user';
+
+const BENE_DENIED_ACCESS = 'access_denied';
 
 
 export async function authorizationCallback(req: Request, res: Response) {
     try {
+
+        if (req.quey.error === BENE_DENIED_ACCESS) {
+            const loggedInUser = getLoggedInUser(db);
+            // clear all saved claims data since the bene has denied access for the application
+            clearBB2Data(loggedInUser);
+            loggedInUser.errors.push(BENE_DENIED_ACCESS);
+            throw new Error('Beneficiary denied application access to their data');
+        }
         
         if (!req.query.code) {
             throw new Error('Response was missing access code');

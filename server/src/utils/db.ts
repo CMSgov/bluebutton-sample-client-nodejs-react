@@ -16,7 +16,8 @@ export interface UserInfo {
 export interface User {
     authToken?: AuthorizationToken,
     userInfo: UserInfo,
-    eobData?: any
+    eobData?: any,
+    errors: string[]
 }
 export interface DB {
     patients: object,
@@ -51,7 +52,8 @@ const db: DB = {
             userName: 'jdoe29999',
             pcp: 'Dr. Hibbert',
             primaryFacility: 'Springfield General Hospital'
-        }
+        },
+        errors: []
     }],
     codeChallenges: {},
     codeChallenge: {
