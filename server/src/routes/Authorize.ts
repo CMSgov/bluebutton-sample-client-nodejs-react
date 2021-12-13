@@ -13,7 +13,7 @@ const BENE_DENIED_ACCESS = 'access_denied';
 export async function authorizationCallback(req: Request, res: Response) {
     try {
 
-        if (req.quey.error === BENE_DENIED_ACCESS) {
+        if (req.query.error === BENE_DENIED_ACCESS) {
             const loggedInUser = getLoggedInUser(db);
             // clear all saved claims data since the bene has denied access for the application
             clearBB2Data(loggedInUser);
