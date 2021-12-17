@@ -3,6 +3,8 @@ import axios from 'axios';
 import config from '../configs/config';
 import db from '../utils/db';
 import { getLoggedInUser } from 'src/utils/user';
+import moment from 'moment';
+import { refreshAccessToken } from 'src/utils/bb2';
 
 /* DEVELOPER NOTES:
 * This is our mocked Data Service layer for both the BB2 API
@@ -16,11 +18,23 @@ export async function getBenefitData(req: Request, res: Response) {
     const loggedInUser = getLoggedInUser(db);
     const envConfig = config[db.settings.env];
     const BB2_BENEFIT_URL = envConfig.bb2BaseUrl + '/' + db.settings.version + '/fhir/ExplanationOfBenefit/';
-    
+
+    if (!loggedInUser.authToken || !loggedInUser.authToken.access_token) {
+        return {};
+    }
+
+    /*
+    * If the access token is expired, use the refresh token to generate a new one
+    */
+    if (moment(loggedInUser.authToken.expires_at).isBefore(moment())) {
+        const newAuthToken = await refreshAccessToken(loggedInUser.authToken.refresh_token)
+        loggedInUser.authToken = newAuthToken;
+    }
+
     const response = await axios.get(BB2_BENEFIT_URL, { 
         params: req.query,
         headers: {
-            'Authorization': `Bearer ${loggedInUser.authToken?.access_token}`
+            'Authorization': `Bearer ${loggedInUser.authToken.access_token}`
         }
     });
     return response.data;

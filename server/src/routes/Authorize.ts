@@ -19,7 +19,7 @@ export async function authorizationCallback(req: Request, res: Response) {
         }
 
         // this gets the token from Medicare.gov once the 'user' authenticates their Medicare.gov account
-        const response = await getAccessToken(req.query.code?.toString(), req.query.state?.toString());        
+        const response = await getAccessToken(req.query.code?.toString(), req.query.state?.toString());
         const authToken = new AuthorizationToken(response.data);
 
         /* DEVELOPER NOTES:
