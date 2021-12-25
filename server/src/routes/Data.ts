@@ -16,7 +16,6 @@ export async function getBenefitData(req: Request, res: Response) {
     const loggedInUser = getLoggedInUser(db);
     const envConfig = config[db.settings.env];
     // get EOB end point
-    // const response = await get(envConfig.bb2BaseUrl + '/' + db.settings.version + '/fhir/ExplanationOfBenefit/', req.query, `${loggedInUser.authToken?.access_token}`);
     const response = await get(`${envConfig.bb2BaseUrl}/${db.settings.version}/fhir/ExplanationOfBenefit/`, req.query, `${loggedInUser.authToken?.access_token}`);
     return (response) ? response.data : null;
 }
@@ -38,7 +37,6 @@ export async function getPatientData(req: Request, res: Response) {
     const loggedInUser = getLoggedInUser(db);
     const envConfig = config[db.settings.env];
     // get Patient end point
-    // const response = await get(envConfig.bb2BaseUrl + '/' + db.settings.version + '/fhir/Patient/', req.query, `${loggedInUser.authToken?.access_token}`);
     const response = await get(`${envConfig.bb2BaseUrl}/${db.settings.version}/fhir/Patient/`, req.query, `${loggedInUser.authToken?.access_token}`);
     res.json(response.data);
 }
@@ -47,7 +45,6 @@ export async function getCoverageData(req: Request, res: Response) {
     const loggedInUser = getLoggedInUser(db);
     const envConfig = config[db.settings.env];
     // get Coverage end point
-    // const response = await get(envConfig.bb2BaseUrl + '/' + db.settings.version + '/fhir/Coverage/', req.query, `${loggedInUser.authToken?.access_token}`);
     const response = await get(`${envConfig.bb2BaseUrl}/${db.settings.version}/fhir/Coverage/`, req.query, `${loggedInUser.authToken?.access_token}`);
     res.json(response.data);
 }
@@ -56,7 +53,6 @@ export async function getUserProfileData(req: Request, res: Response) {
     const loggedInUser = getLoggedInUser(db);
     const envConfig = config[db.settings.env];
     // get usrinfo end point
-    // const response = await get(envConfig.bb2BaseUrl + '/' + db.settings.version + '/connect/userinfo', req.query, `${loggedInUser.authToken?.access_token}`);
     const response = await get(`${envConfig.bb2BaseUrl}/${db.settings.version}/connect/userinfo`, req.query, `${loggedInUser.authToken?.access_token}`);
     res.json(response.data);
 }

@@ -25,11 +25,11 @@ export async function request(config: any, retryFlag: boolean) {
         resp = await axios(config);
     } catch (error: any) {
         // DEVELOPER NOTES:
-        // here handle errors per errors.md
+        // here handle errors per ErrorResponses.md
         console.log('Error message: [', error.message, ']');
         if (error.response) {
             console.log("response code: " + error.response.status)
-            console.log("response text: " + error.response.data)
+            console.log("response text: " + JSON.stringify(error.response.data))
             // DEVELOPER NOTES:
             // check for retryable (e.g. 500 & fhir) errors and do retrying...
             if (retryFlag && isRetryable(error)) {
@@ -50,8 +50,8 @@ export async function request(config: any, retryFlag: boolean) {
             console.log("error.request: " + error.request);
         }
         // dump axios config for diagnosis
-        console.log("config:")
-        console.log(error.config);
+        // console.log("config:")
+        // console.log(error.config);
     }
     return resp    
 }
@@ -82,10 +82,11 @@ async function do_retry(config: any) {
             console.log(resp.data);
             break;
         } catch (error: any) {
-            console.log("retry error: [", error.message, "]")
+            console.log("retry error: [", JSON.stringify(error.message), "]")
             if (error.response) {
                 console.log("response code: ", error.response.status)
                 console.log("response data: ", error.response.data)
+                resp = error.response
             }
         }
     }
