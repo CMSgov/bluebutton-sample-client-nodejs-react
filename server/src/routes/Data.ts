@@ -30,7 +30,12 @@ export async function getBenefitData(req: Request, res: Response) {
 export async function getBenefitDataEndPoint(req: Request, res: Response) {
     const loggedInUser = getLoggedInUser(db);
     const data = loggedInUser.eobData;
-    res.json(data);
+    if ( data && data.entry ) {
+        res.json(data)
+    }
+    else {
+        res.json({message: "Unable to load EOB Data."});
+    }
 }
 
 export async function getPatientData(req: Request, res: Response) {

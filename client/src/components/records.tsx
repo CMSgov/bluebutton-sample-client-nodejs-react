@@ -37,7 +37,7 @@ export default function Records({ }) {
             .then(res => {
                 return res.json();
             }).then(eobData => {
-                if (eobData.hasOwnProperty('entry')) {
+                if (eobData.entry) {
                     const records: EOBRecord[] = eobData.entry.map((resourceData: any) => {
                         const resource = resourceData.resource;
                         return {
@@ -50,7 +50,7 @@ export default function Records({ }) {
                     setRecords(records);
                 }
                 else {
-                    setMessage({"type": "error", "content": eobData?.detail || "Unknown"})
+                    setMessage({"type": "error", "content": eobData?.message || "Unknown"})
                 }
             });
     }, [])
