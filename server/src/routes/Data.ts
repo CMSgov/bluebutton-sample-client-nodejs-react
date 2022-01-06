@@ -3,6 +3,8 @@ import config from '../configs/config';
 import db from '../utils/db';
 import { getLoggedInUser } from 'src/utils/user';
 import { get } from '../utils/request'
+import moment from 'moment';
+import { refreshAccessToken } from 'src/utils/bb2';
 
 /* DEVELOPER NOTES:
 * This is our mocked Data Service layer for both the BB2 API
@@ -15,9 +17,29 @@ import { get } from '../utils/request'
 export async function getBenefitData(req: Request, res: Response) {
     const loggedInUser = getLoggedInUser(db);
     const envConfig = config[db.settings.env];
-    // get EOB end point
-    const response = await get(`${envConfig.bb2BaseUrl}/${db.settings.version}/fhir/ExplanationOfBenefit/`, req.query, `${loggedInUser.authToken?.access_token}`);
-    return (response) ? response.data : null;
+    const BB2_BENEFIT_URL = envConfig.bb2BaseUrl + '/' + db.settings.version + '/fhir/ExplanationOfBenefit/';
+
+    if (!loggedInUser.authToken || !loggedInUser.authToken.access_token) {
+        return {};
+    }
+
+    /*
+    * If the access token is expired, use the refresh token to generate a new one
+    */
+    if (moment(loggedInUser.authToken.expires_at).isBefore(moment())) {
+        const newAuthToken = await refreshAccessToken(loggedInUser.authToken.refresh_token)
+        loggedInUser.authToken = newAuthToken;
+    }
+
+    const response = await get(BB2_BENEFIT_URL, req.query, `${loggedInUser.authToken?.access_token}`);
+
+    if (response.status === 200) {
+        return response.data;
+    }
+    else {
+        // send generic error to client
+        return JSON.parse('{"message": "Unable to load EOB Data - fetch FHIR resource error."}');
+    }
 }
 
 /* 
@@ -30,11 +52,8 @@ export async function getBenefitData(req: Request, res: Response) {
 export async function getBenefitDataEndPoint(req: Request, res: Response) {
     const loggedInUser = getLoggedInUser(db);
     const data = loggedInUser.eobData;
-    if ( data && data.entry ) {
+    if ( data ) {
         res.json(data)
-    }
-    else {
-        res.json({message: "Unable to load EOB Data."});
     }
 }
 

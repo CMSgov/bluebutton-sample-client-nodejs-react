@@ -1,12 +1,16 @@
 import axios from 'axios';
 import FormData from 'form-data';
 
-export async function post(endpoint_url: string, data: FormData, extra: any) {
+export async function post(endpoint_url: string, data: FormData, headers: any) {
     return await request({ 
         method: 'post',
         url: endpoint_url,
         data: data,
-        headers: extra}, true);
+        headers: headers}, true);
+}
+
+export async function post_w_config(config: any) {
+    return await request(config, false);
 }
 
 export async function get(endpointUrl: string, params: any, authToken: string) {

@@ -50,7 +50,9 @@ export default function Records({ }) {
                     setRecords(records);
                 }
                 else {
-                    setMessage({"type": "error", "content": eobData?.message || "Unknown"})
+                    if (eobData.message) {
+                        setMessage({"type": "error", "content": eobData.message || "Unknown"})
+                    }
                 }
             });
     }, [])

@@ -1,4 +1,4 @@
-import { DB } from "./db";
+import { DB, User } from "./db";
 
 /* DEVELOPER NOTES:
 * Here we are literally just grabbing the first user 
@@ -9,4 +9,9 @@ import { DB } from "./db";
 */
 export function getLoggedInUser(db : DB) {
     return db.users[0];
+}
+
+export function clearBB2Data(user: User) {
+    user.authToken = undefined;
+    user.eobData = undefined;
 }
