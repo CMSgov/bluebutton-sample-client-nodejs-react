@@ -38,9 +38,9 @@ export async function request(config: any, retryFlag: boolean) {
             // check for retryable (e.g. 500 & fhir) errors and do retrying...
             if (retryFlag && isRetryable(error)) {
                 console.log("Request failed and is retryable, entering retry process...")
-                var retry_resp = await do_retry(config)
-                if (retry_resp) {
-                    resp = retry_resp;
+                var retryResp = await do_retry(config)
+                if (retryResp) {
+                    resp = retryResp;
                 }
             }
             else {
