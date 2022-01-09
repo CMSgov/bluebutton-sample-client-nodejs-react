@@ -59,21 +59,21 @@ pipeline {
       }
     }
 
-    stage("Start server") {
-      steps {
-        sh """
-          cd server;yarn start:dev
-        """
-      }
-    }
+    // stage("Start server") {
+    //   steps {
+    //     sh """
+    //       cd server;yarn start:dev
+    //     """
+    //   }
+    // }
 
-    stage("Start client") {
-      steps {
-        sh """
-          cd client;yarn start
-        """
-      }
-    }
+    // stage("Start client") {
+    //   steps {
+    //     sh """
+    //       cd client;yarn start
+    //     """
+    //   }
+    // }
 
   }
 }
