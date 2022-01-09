@@ -1,8 +1,10 @@
 import { Router, Request, Response } from 'express';
 import axios from 'axios';
-import getLoggedInUser from '../utils/user';
+import moment from 'moment';
+import { getLoggedInUser } from '../utils/user';
 import config from '../configs/config';
 import db from '../utils/db';
+import { refreshAccessToken } from '../utils/bb2';
 
 function getBearerHeader() {
   const loggedInUser = getLoggedInUser(db);
@@ -20,14 +22,28 @@ function getBearerHeader() {
 // this function is used to query eob data for the authenticated Medicare.gov
 // user and returned - we are then storing in a mocked DB
 export async function getBenefitData(req: Request) {
+  const loggedInUser = getLoggedInUser(db);
   const envConfig = config[db.settings.env];
   const FHIR_EOB_PATH = 'fhir/ExplanationOfBenefit/';
   const BB2_BENEFIT_URL = `${envConfig.bb2BaseUrl}/${db.settings.version}/${FHIR_EOB_PATH}`;
+
+  if (!loggedInUser.authToken || !loggedInUser.authToken.accessToken) {
+    return { data: {} };
+  }
+
+  /*
+  * If the access token is expired, use the refresh token to generate a new one
+  */
+  if (moment(loggedInUser.authToken.expiresAt).isBefore(moment())) {
+    const newAuthToken = await refreshAccessToken(loggedInUser.authToken.refreshToken);
+    loggedInUser.authToken = newAuthToken;
+  }
 
   const response = await axios.get(BB2_BENEFIT_URL, {
     params: req.query,
     headers: getBearerHeader(),
   });
+
   return response;
 }
 

@@ -1,4 +1,4 @@
-import { DB } from './db';
+import { DB, User } from './db';
 
 /* DEVELOPER NOTES:
 * Here we are literally just grabbing the first user
@@ -7,6 +7,12 @@ import { DB } from './db';
 * and provided the details/data about that user to
 * the other services/portions of the application
 */
-export default function getLoggedInUser(db : DB) {
+export function getLoggedInUser(db : DB) {
   return db.users[0];
+}
+
+export function clearBB2Data(user: User) {
+  const userRef = user;
+  userRef.authToken = undefined;
+  userRef.eobData = undefined;
 }
