@@ -62,7 +62,7 @@ pipeline {
     stage("Start server") {
       steps {
         sh """
-          cd server;yarn star:dev
+          cd server;yarn start:dev
         """
       }
     }
