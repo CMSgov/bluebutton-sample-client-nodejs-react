@@ -7,6 +7,7 @@ services:
       dockerfile: ./Dockerfile
     ports: 
       - "3001:3001"
+      - "9229:9229"
   client:
     build:
       context: ./client

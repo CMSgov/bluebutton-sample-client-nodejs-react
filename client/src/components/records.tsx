@@ -1,5 +1,5 @@
 import { Table, TableCaption, TableRow, TableCell, TableHead, TableBody } from '@cmsgov/design-system';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export type EOBRecord = {
     id: string,
@@ -8,7 +8,7 @@ export type EOBRecord = {
     amount: number
 }
 
-export default function Records({ }) {
+export default function Records() {
     const [records, setRecords] = useState<EOBRecord[]>([]);
     /*
     * DEVELOPER NOTES:
@@ -31,6 +31,7 @@ export default function Records({ }) {
             .then(res => {
                 return res.json();
             }).then(eobData => {
+                /* eslint-disable @typescript-eslint/no-explicit-any */
                 const records: EOBRecord[] = eobData.entry.map((resourceData: any) => {
                     const resource = resourceData.resource;
                     return {
@@ -76,4 +77,4 @@ export default function Records({ }) {
             </Table>
         </div>
     );
-};
+}

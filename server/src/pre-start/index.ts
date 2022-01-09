@@ -7,23 +7,23 @@ import path from 'path';
 import dotenv from 'dotenv';
 import commandLineArgs from 'command-line-args';
 
-
-
 (() => {
-    // Setup command line options
-    const options = commandLineArgs([
-        {
-            name: 'env',
-            alias: 'e',
-            defaultValue: 'development',
-            type: String,
-        },
-    ]);
-    // Set the env file
-    const result2 = dotenv.config({
-        path: path.join(__dirname, `env/${options.env}.env`),
-    });
-    if (result2.error) {
-        throw result2.error;
-    }
+  // Setup command line options
+  const options = commandLineArgs([
+    {
+      name: 'env',
+      alias: 'e',
+      defaultValue: 'development',
+      type: String,
+    },
+  ]);
+  // Set the env file
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+  const tail = `env/${options?.env || 'default'}.env`;
+  const result2 = dotenv.config({
+    path: path.join(__dirname, tail),
+  });
+  if (result2.error) {
+    throw result2.error;
+  }
 })();
