@@ -35,6 +35,14 @@ pipeline {
       }
     }
 
+    stage("CONFIG SERVER") {
+      steps {
+        sh """
+          cd server;cp src/configs/sample.config.ts src/configs/config.ts;cp src/pre-start/env/sandbox.sample.env src/pre-start/env/development.env
+        """
+      }
+    }
+
     stage("ESLint server") {
       steps{
         sh """
