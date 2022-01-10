@@ -61,6 +61,7 @@ export async function getBenefitDataEndPoint(req: Request, res: Response) {
 }
 
 export async function getPatientData(req: Request, res: Response) {
+  // trigger CI test  
   const envConfig = config[db.settings.env];
   const BB2_PATIENT_URL = `${envConfig.bb2BaseUrl}/${db.settings.version}/fhir/Patient/`;
   const response = await axios.get(BB2_PATIENT_URL, {
