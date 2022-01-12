@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import logger from '@shared/Logger';
+import logger from '../shared/Logger';
 import AuthorizationToken from '../entities/AuthorizationToken';
 import Settings from '../entities/Settings';
 import db from '../utils/db';

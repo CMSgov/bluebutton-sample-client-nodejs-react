@@ -1,10 +1,9 @@
 import axios from 'axios';
 import FormData from 'form-data';
-
-import AuthorizationToken from '@entities/AuthorizationToken';
 import db from './db';
 import config from '../configs/config';
 import { generateCodeChallenge, generateRandomState } from './generatePKCE';
+import AuthorizationToken from '../entities/AuthorizationToken';
 
 export function generateAuthorizeUrl(): string {
   const envConfig = config[db.settings.env];

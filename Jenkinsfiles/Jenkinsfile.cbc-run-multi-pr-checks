@@ -46,7 +46,7 @@ pipeline {
     stage("ESLint server") {
       steps{
         sh """
-          cd server;node_modules/.bin/eslint -c eslintrc.json src/**/*.ts
+          cd server;node_modules/.bin/eslint -c eslintrc.json src/**/*.ts spec/*.ts
         """
       }
     }
@@ -59,6 +59,15 @@ pipeline {
       }
     }
 
+    stage("Test server ( mock external requests )") {
+      steps{
+        sh """
+          cd server;cp ./src/configs/sample.config.ts ./src/configs/config.ts;cp ./src/pre-start/env/sandbox.sample.env ./src/pre-start/env/development.env;yarn test
+        """
+      }
+    }
+
+    // TODO: add selenium tests
     // stage("Start server") {
     //   steps {
     //     sh """

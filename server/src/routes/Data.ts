@@ -61,7 +61,6 @@ export async function getBenefitDataEndPoint(req: Request, res: Response) {
 }
 
 export async function getPatientData(req: Request, res: Response) {
-  // trigger CI test  
   const envConfig = config[db.settings.env];
   const BB2_PATIENT_URL = `${envConfig.bb2BaseUrl}/${db.settings.version}/fhir/Patient/`;
   const response = await axios.get(BB2_PATIENT_URL, {
@@ -100,6 +99,8 @@ const router = Router();
 // turn off eslinting for below router get function - it's OK to call a async which return a promise
 // eslint-disable-next-line
 router.get('/benefit', getBenefitDataEndPoint);
+// eslint-disable-next-line
+router.get('/benefit-direct', getBenefitData);
 // eslint-disable-next-line
 router.get('/patient', getPatientData);
 // eslint-disable-next-line
