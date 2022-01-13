@@ -3,10 +3,13 @@ import './styles/index.scss';
 
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { BrowserRouter } from 'react-router-dom';
 
 ReactDOM.render(
   <div className="ds-base">
-    <App />
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </div>,
   document.querySelector('#root'),
 );
