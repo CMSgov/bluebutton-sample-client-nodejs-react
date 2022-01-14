@@ -62,7 +62,7 @@ export default function Records() {
     * Carrier Claims, SNF, HHA, Hospice, Inpatient, and Outpatient
     */
     useEffect(() => {
-        fetch('/api/data/benefit')
+        fetch('/api/data/beneficiary_data')
             .then(res => {
                 return res.json();
             }).then(beneData => {

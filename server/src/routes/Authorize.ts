@@ -3,7 +3,7 @@ import AuthorizationToken from '../entities/AuthorizationToken';
 import Settings from '../entities/Settings';
 import db from '../utils/db';
 import { getAccessToken, generateAuthorizeUrl } from '../utils/bb2';
-import { getBenefitData, getPatientData, getCoverageData, getPatientJSON, getCoverageJSON } from './Data';
+import { getExplanationOfBenefitData, getPatientJSON, getCoverageJSON } from './Data';
 import logger from '@shared/Logger';
 import { clearBB2Data, getLoggedInUser } from 'src/utils/user';
 
@@ -56,7 +56,7 @@ export async function authorizationCallback(req: Request, res: Response) {
             * You could also request data for the Patient endpoint and/or the Coverage endpoint here
             * using similar functionality
             */
-            loggedInUser.eobData = await getBenefitData( req, res);
+            loggedInUser.eobData = await getExplanationOfBenefitData( req, res);
             loggedInUser.patient = await getPatientJSON( req, res);
             loggedInUser.coverage = await getCoverageJSON( req, res);
         }
