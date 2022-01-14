@@ -136,6 +136,7 @@ export default function Records() {
                     <TableCaption>Medicare Patient Info</TableCaption>
                     <TableHead>
                         <TableRow>
+                            <TableCell id="column_0">ID</TableCell>
                             <TableCell id="column_1">Name</TableCell>
                             <TableCell id="column_2">Gender</TableCell>
                             <TableCell id="column_3">Birth Date</TableCell>
@@ -147,6 +148,9 @@ export default function Records() {
                         {patients.map(record => {
                             return (
                                 <TableRow key={record.id}>
+                                    <TableCell stackedTitle="ID" headers="column_0">
+                                        {record.id}
+                                    </TableCell>
                                     <TableCell stackedTitle="Name" headers="column_1">
                                         {record.name}
                                     </TableCell>
@@ -173,6 +177,7 @@ export default function Records() {
                     <TableCaption>Medicare Coverage Info</TableCaption>
                     <TableHead>
                         <TableRow>
+                            <TableCell id="column_0">ID</TableCell>
                             <TableCell id="column_1">Subscriber ID</TableCell>
                             <TableCell id="column_2">Status</TableCell>
                             <TableCell id="column_3">Beneficiary Reference</TableCell>
@@ -183,6 +188,9 @@ export default function Records() {
                         {coverages.map(record => {
                             return (
                                 <TableRow key={record.id}>
+                                    <TableCell stackedTitle="ID" headers="column_0">
+                                        {record.id}
+                                    </TableCell>
                                     <TableCell stackedTitle="Subscriber ID" headers="column_1">
                                         {record.subscriberId}
                                     </TableCell>
@@ -206,6 +214,7 @@ export default function Records() {
                     <TableCaption>Medicare Prescription Drug Claims Data</TableCaption>
                     <TableHead>
                         <TableRow>
+                            <TableCell id="column_0">ID</TableCell>
                             <TableCell id="column_1">NDC Code</TableCell>
                             <TableCell id="column_2">Prescription Drug Name</TableCell>
                             <TableCell id="column_3">Cost</TableCell>
@@ -215,6 +224,9 @@ export default function Records() {
                         {eobs.map(record => {
                             return (
                                 <TableRow key={record.id}>
+                                    <TableCell stackedTitle="ID" headers="column_0">
+                                        {record.id}
+                                    </TableCell>
                                     <TableCell stackedTitle="NDC Code" headers="column_1">
                                         {record.code}
                                     </TableCell>
