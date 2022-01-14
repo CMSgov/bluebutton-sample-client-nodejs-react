@@ -8,6 +8,15 @@ export type EOBRecord = {
     amount: number
 }
 
+export type DiagnosisRecord = {
+    id: string,
+    sequence: string,
+    diagnosisCode: string,
+    diagnosisDisplay: string,
+    typeCode: string,
+    typeDisplay: string
+}
+
 export type PatientRecord = {
     id: string,
     name: string,
@@ -32,6 +41,7 @@ export type ErrorResponse = {
 
 export default function Records() {
     const [eobs, setRecords] = useState<EOBRecord[]>([]);
+    const [diagnosis, setDiagnosis] = useState<DiagnosisRecord[]>([]);
     const [patients, setPatients] = useState<PatientRecord[]>([]);
     const [coverages, setCoverages] = useState<CoverageRecord[]>([]);
     const [message, setMessage] = useState<ErrorResponse>();
@@ -67,6 +77,18 @@ export default function Records() {
                         }
                     });
                     setRecords(records);
+                    const diagnosisRecords: DiagnosisRecord[] = beneData.eobData.entry.map((resourceData: any) => {
+                        const resource = resourceData.resource;
+                        return {
+                            id: resource.id,
+                            sequence: resource.diagnosis[0]?.sequence || 'Unknown',
+                            diagnosisCode: resource.diagnosis[0]?.diagnosisCodeableConcept?.coding[0]?.code || 'Unknown Diagnosis Coding Code',
+                            diagnosisDisplay: resource.diagnosis[0]?.diagnosisCodeableConcept?.coding[0]?.display || 'Unknown Diagnosis Coding Display',
+                            typeCode: resource.diagnosis[0]?.type[0]?.coding[0]?.code || 'Unknown Type Coding Code',
+                            typeDisplay: resource.diagnosis[0]?.type[0]?.coding[0]?.display || 'Unknown Type Coding Display',
+                        }
+                    });
+                    setDiagnosis(diagnosisRecords);
                 }
                 
                 if (beneData.patient && beneData.patient.entry) {
@@ -235,6 +257,47 @@ export default function Records() {
                                     </TableCell>
                                     <TableCell stackedTitle="Cost" headers="column_3">
                                         ${record.amount}.00
+                                    </TableCell>
+                                </TableRow>
+                            )
+                        })}
+                    </TableBody>
+                </Table>
+            </div>
+            <div className='full-width-card'>
+                <Table className="ds-u-margin-top--2" stackable stackableBreakpoint="md">
+                    <TableCaption>Medicare Diagnosis Data</TableCaption>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell id="column_0">ID</TableCell>
+                            <TableCell id="column_1">Sequence</TableCell>
+                            <TableCell id="column_2">Code</TableCell>
+                            <TableCell id="column_3">Name</TableCell>
+                            <TableCell id="column_4">Type Code</TableCell>
+                            <TableCell id="column_5">Type Name</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {diagnosis.map(record => {
+                            return (
+                                <TableRow key={record.id}>
+                                    <TableCell stackedTitle="ID" headers="column_0">
+                                        {record.id}
+                                    </TableCell>
+                                    <TableCell stackedTitle="Sequence" headers="column_1">
+                                        {record.sequence}
+                                    </TableCell>
+                                    <TableCell stackedTitle="Code" headers="column_2">
+                                        {record.diagnosisCode}
+                                    </TableCell>
+                                    <TableCell stackedTitle="Name" headers="column_3">
+                                        {record.diagnosisDisplay}
+                                    </TableCell>
+                                    <TableCell stackedTitle="Type Code" headers="column_4">
+                                        {record.typeCode}
+                                    </TableCell>
+                                    <TableCell stackedTitle="Type Name" headers="column_5">
+                                        {record.typeDisplay}
                                     </TableCell>
                                 </TableRow>
                             )
