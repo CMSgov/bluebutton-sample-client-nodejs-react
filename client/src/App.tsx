@@ -1,6 +1,4 @@
 import Header from './components/header';
-import Patient from './components/patient';
-import PatientData from './components/patientData';
 import Records from './components/records';
 import { Routes, Route } from "react-router-dom";
 import { TabPanel, Tabs } from '@cmsgov/design-system';
