@@ -1,5 +1,4 @@
 import { VerticalNav } from "@cmsgov/design-system";
-import VerticalNavItem from "@cmsgov/design-system/dist/types/VerticalNav/VerticalNavItem";
 import { Link } from "react-router-dom";
 
 const ReactRouterLink = ({ ...props }) => (
