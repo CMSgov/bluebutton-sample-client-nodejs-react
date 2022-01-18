@@ -1,50 +1,43 @@
 import Header from './components/header';
-import Patient from './components/patient';
-import PatientData from './components/patientData';
-import Records from './components/records';
-import { BrowserRouter as Router} from "react-router-dom";
-import { TabPanel, Tabs } from '@cmsgov/design-system';
+import { Routes, Route } from "react-router-dom";
+import { Layout } from './components/layout';
+import Profile from './components/profile';
+import Medications from './components/medications';
+import Procedures from './components/procedures';
+import Providers from './components/providers';
+import Expenses from './components/expenses';
+import Diagnoses from './components/diagnoses';
+import { useState, useEffect } from 'react';
+
+export type AllMedicaidClaimsData = {
+  eobData?: any
+}
 
 function App() {
+  const [records, setRecords] = useState<AllMedicaidClaimsData>({});
+
+  useEffect(() => {
+    fetch('/api/data/benefit')
+      .then(res => {
+        return res.json();
+      }).then(eobData => {
+        setRecords({ eobData });
+      });
+  }, [])
   return (
     <div className="ds-l-container ds-u-margin-bottom--7 ds-u-padding-bottom--7">
-    <Router>
       <Header />
-      <Tabs tablistClassName="ds-u-margin-top--3">
-        <TabPanel id="patient" tab="Patient info">
-          <h2>Patient information</h2>
-          <div className="ds-u-display--flex ds-u-flex-direction--column ds-u-lg-flex-direction--row ds-u-flex-wrap--nowrap ds-u-lg-flex-wrap--wrap">
-            <div className="bb-c-card default-card">
-              <Patient />
-            </div>          
-            <div className="bb-c-card default-card">
-              <PatientData />
-            </div>          
-          </div>
-          {}
-          <Records /> 
-          {}
-        <div>
-          <div>
-            {}
-          </div>
-        </div>
-        </TabPanel>
-        <TabPanel id="summary" tab="Summary">
-          <p className='ds-u-measure--base'>
-            Blue Button 2.0 is a standards-based application programming interface (API) that delivers Medicare Part A, B, and D data for over 60 million Medicare beneficiaries. <a href="https://bluebutton.cms.gov/">Learn more about Blue Button 2.0</a>
-          </p>
-
-          <p className='ds-u-measure--base'>
-            The CMS design system is a set of open source design and front-end development resources
-            for creating Section 508 compliant, responsive, and consistent websites. It builds on the
-            U.S. Web Design System and extends it to support additional CSS and React components,
-            utility classes, and a grid framework to allow teams to quickly prototype and build
-            accessible, responsive, production-ready websites. <a href="https://design.cms.gov/">Learn more about CMS Design System</a>
-          </p>
-        </TabPanel>
-      </Tabs>
-    </Router>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Profile eobData={records.eobData} />} />
+          <Route path="medications" element={<Medications />} />
+          <Route path="diagnoses" element={<Diagnoses />} />
+          <Route path="procedures" element={<Procedures />} />
+          <Route path="providers" element={<Providers eobData={records.eobData} />} />
+          <Route path="expenses" element={<Expenses />} />
+          <Route path="*" element={<Profile eobData={records.eobData} />} />
+        </Route>
+      </Routes>
     </div>
   );
 }
