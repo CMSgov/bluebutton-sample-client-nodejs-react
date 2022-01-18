@@ -21,18 +21,6 @@ function App() {
       .then(res => {
         return res.json();
       }).then(eobData => {
-        console.log(eobData);
-        /*
-        const records: any[] = eobData.entry.map((resourceData: any) => {
-          const resource = resourceData.resource;
-          return {
-            id: resource.id,
-            code: resource.item[0]?.productOrService?.coding[0]?.code || 'Unknown',
-            display: resource.item[0]?.productOrService?.coding[0]?.display || 'Unknown Prescription Drug',
-            amount: resource.item[0]?.adjudication[7]?.amount?.value || '0'
-          }`
-        });
-        */
         setRecords({ eobData });
       });
   }, [])
@@ -41,13 +29,13 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<Profile />} />
+          <Route index element={<Profile eobData={records.eobData} />} />
           <Route path="medications" element={<Medications />} />
           <Route path="diagnoses" element={<Diagnoses />} />
           <Route path="procedures" element={<Procedures />} />
           <Route path="providers" element={<Providers eobData={records.eobData} />} />
           <Route path="expenses" element={<Expenses />} />
-          <Route path="*" element={<Profile />} />
+          <Route path="*" element={<Profile eobData={records.eobData} />} />
         </Route>
       </Routes>
     </div>

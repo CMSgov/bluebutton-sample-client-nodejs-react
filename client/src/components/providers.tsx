@@ -95,13 +95,12 @@ export default function Providers({ eobData }: { eobData?: any }) {
 
     if (eobData && eobData.entry && eobData.entry.length > 0) {
         providers = eobData.entry.map((eobItem: any, index: number) => {
-            console.log(eobItem)
             const identifierType = jp.value(eobItem, `$.resource.careTeam[${index}].provider.identifier.type.coding[0].code`);
             const roleType = jp.value(eobItem, `$.resource.careTeam[${index}].role.coding[0].code`);
             const npi = identifierType === 'npi' ? jp.value(eobItem, `$.resource.careTeam[${index}].provider.identifier.value`) : undefined;
             const provider: Provider = {
                 specialties: [],
-                prescriber: roleType === 'prescriber' ? 'yes' : 'no'
+                prescriber: roleType === 'prescribing' ? 'yes' : 'no'
             }
 
             if (npi) {
@@ -137,9 +136,9 @@ export default function Providers({ eobData }: { eobData?: any }) {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {providers.map((provider) => {
+                    {providers.map((provider, index) => {
                         return (
-                            <TableRow>
+                            <TableRow key={index}>
                                 <TableCell>{provider.name}</TableCell>
                                 <TableCell>{provider.specialties.join(', ')}</TableCell>
                                 <TableCell>{provider.prescriber}</TableCell>

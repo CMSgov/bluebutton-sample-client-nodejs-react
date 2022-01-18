@@ -5,7 +5,7 @@ import avatar from '../images/patient.png';
 import chart from '../images/who-charted.png';
 import { SettingsType } from '../types/settings';
 
-export default function Profile() {
+export default function Profile({ eobData }: { eobData?: any }) {
     const [settingsState] = useState<SettingsType>({
         pkce: true,
         version: 'v2',
@@ -16,6 +16,8 @@ export default function Profile() {
         const authUrlResponse = await axios.get(`/api/authorize/authurl`, { params: settingsState });
         window.location.href = authUrlResponse.data || '/';
     }
+
+    const connected = eobData ? (<h4 className='ds-u-text-align--center'>Connected!</h4>) : (<Button variation="primary" onClick={goAuthorize}>Authorize</Button>);
 
     return (
         <div className='ds-u-justify-content--center ds-u-align-items--center'>
@@ -31,7 +33,7 @@ export default function Profile() {
             <div>
                 <div className='ds-u-display--flex ds-u-flex-direction--column ds-u-justify-content--center ds-u-align-items--center'>
                     <h4 className='ds-u-text-align--center'>Connect your medicare claims data</h4>
-                    <Button variation="primary" onClick={goAuthorize}>Authorize</Button>
+                    {connected}
                 </div>
             </div>
         </div>
