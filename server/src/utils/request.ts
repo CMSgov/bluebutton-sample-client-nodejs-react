@@ -10,7 +10,7 @@ export async function post(endpoint_url: string, data: FormData, headers: any) {
         headers: headers}, true);
 }
 
-export async function post_w_config(config: any) {
+export async function postWithConfig(config: any) {
     return await request(config, false);
 }
 
@@ -39,7 +39,7 @@ export async function request(config: any, retryFlag: boolean) {
             // check for retryable (e.g. 500 & fhir) errors and do retrying...
             if (retryFlag && isRetryable(error)) {
                 logger.info("Request failed and is retryable, entering retry process...")
-                var retryResp = await do_retry(config)
+                var retryResp = await doRetry(config)
                 if (retryResp) {
                     resp = retryResp;
                 }
@@ -69,7 +69,7 @@ function isRetryable(error: any) {
 
 // for demo: retry init-interval = 5 sec, max attempt 3, with retry interval = init-interval * (2 ** n)
 // where n retry attempted
-async function do_retry(config: any) {
+async function doRetry(config: any) {
     const interval = 5
     const max_attempts = 3
     var resp = null
