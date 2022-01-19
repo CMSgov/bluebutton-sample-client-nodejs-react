@@ -81,4 +81,6 @@ Both ways of starting the sample are running the sample in foreground, logging a
 
 For client and server started separately in their command window, type Ctrl C respectively
 
-
+Error Responses and handling:
+-----------------------------
+[See ErrorResponses.md](./ErrorResponses.md)

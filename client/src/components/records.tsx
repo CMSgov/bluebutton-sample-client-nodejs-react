@@ -13,7 +13,7 @@ export type ErrorResponse = {
     content: string,
 }
 
-export default function Records({ }) {
+export default function Records() {
     const [records, setRecords] = useState<EOBRecord[]>([]);
     const [message, setMessage] = useState<ErrorResponse>();
     /*

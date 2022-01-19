@@ -5,6 +5,7 @@
     "build": "./node_modules/.bin/ts-node build.ts",
     "lint": "eslint . --ext .ts",
     "start": "node -r module-alias/register ./dist --env=production",
+    "start:debug": "node --inspect=0.0.0.0:9229 ./node_modules/.bin/ts-node -r tsconfig-paths/register ./src",
     "start:dev": "nodemon",
     "test": "nodemon --config ./spec/nodemon.json"
   },
