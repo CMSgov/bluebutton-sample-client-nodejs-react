@@ -71,12 +71,12 @@ function isRetryable(error: any) {
 // where n retry attempted
 async function doRetry(config: any) {
     const interval = 5
-    const max_attempts = 3
+    const maxAttempts = 3
     var resp = null
-    for (let i = 0; i < max_attempts; i++) {
-        var wait_in_sec = interval * (2 ** i)
-        logger.info("wait " + wait_in_sec + " seconds...")
-        await sleep(wait_in_sec * 1000)
+    for (let i = 0; i < maxAttempts; i++) {
+        var waitInSec = interval * (2 ** i)
+        logger.info("wait " + waitInSec + " seconds...")
+        await sleep(waitInSec * 1000)
         logger.info("retry attempts: " + (i+1))
         try {
             resp = await axios(config);
