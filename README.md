@@ -57,3 +57,30 @@ Read the DEVELOPER NOTES found in the code to understand the application
 and where you will need to make adjustments/changes as well as some 
 suggestions for best practices.
 
+Usage Examples
+-----------
+
+To start the sample in Docker :
+
+1. go to the base directory of the repo
+2. docker-compose up
+
+To start the sample in native OS (e.g. Linux) with server and client components started in separate windows :
+
+1. go to the base directory of the repo
+2. run below to start the server:
+   1. yarn --cwd server install
+   2. yarn --cwd server start:dev 
+3. run below to start the client:
+   1. yarn --cwd client install
+   2. yarn --cwd client start-native
+
+To stop the sample:
+
+Both ways of starting the sample are running the sample in foreground, logging and tracing from both client and server components are on stdout of the command window, to stop the sample, press Ctl C, which will terminate both the client and server components.
+
+For client and server started separately in their command window, type Ctrl C respectively
+
+Error Responses and handling:
+-----------------------------
+[See ErrorResponses.md](./ErrorResponses.md)

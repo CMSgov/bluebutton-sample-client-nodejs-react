@@ -1,18 +1,18 @@
 import { Router, Request, Response } from 'express';
-import axios from 'axios';
 import moment from 'moment';
-import { getLoggedInUser } from '../utils/user';
 import config from '../configs/config';
 import db from '../utils/db';
-import { refreshAccessToken } from '../utils/bb2';
+import { get } from '../utils/request'
+import { getLoggedInUser } from 'src/utils/user';
+import { refreshAccessToken } from 'src/utils/bb2';
 
-function getBearerHeader() {
-  const loggedInUser = getLoggedInUser(db);
-  return {
-    Authorization: `Bearer ${loggedInUser?.authToken?.accessToken || 'Invalid Token'}`,
-  };
-}
-
+// function getBearerHeader() {
+//     const loggedInUser = getLoggedInUser(db);
+//     return {
+//       Authorization: `Bearer ${loggedInUser?.authToken?.accessToken || 'Invalid Token'}`,
+//     };
+//   }
+  
 /* DEVELOPER NOTES:
 * This is our mocked Data Service layer for both the BB2 API
 * as well as for our mocked db Service Layer
@@ -39,11 +39,16 @@ export async function getBenefitData(req: Request) {
     loggedInUser.authToken = newAuthToken;
   }
 
-  const response = await axios.get(BB2_BENEFIT_URL, {
-    params: req.query,
-    headers: getBearerHeader(),
-  });
+  const response = await get(BB2_BENEFIT_URL, req.query, `${loggedInUser.authToken?.accessToken}`);
 
+  if (response.status === 200) {
+    return response.data;
+  }
+  else {
+    // send generic error to client
+    return JSON.parse('{"message": "Unable to load EOB Data - fetch FHIR resource error."}');
+  }
+  
   return response;
 }
 
@@ -55,43 +60,35 @@ export async function getBenefitData(req: Request) {
 *  DB you would choose to use
 */
 export async function getBenefitDataEndPoint(req: Request, res: Response) {
-  const loggedInUser = getLoggedInUser(db);
-  const data = loggedInUser.eobData;
-  res.json(data);
+    const loggedInUser = getLoggedInUser(db);
+    const data = loggedInUser.eobData;
+    if ( data ) {
+        res.json(data)
+    }
 }
 
 export async function getPatientData(req: Request, res: Response) {
-  const envConfig = config[db.settings.env];
-  const BB2_PATIENT_URL = `${envConfig.bb2BaseUrl}/${db.settings.version}/fhir/Patient/`;
-  const response = await axios.get(BB2_PATIENT_URL, {
-    params: req.query,
-    headers: getBearerHeader(),
-  });
-  res.json(response.data);
+    const loggedInUser = getLoggedInUser(db);
+    const envConfig = config[db.settings.env];
+    // get Patient end point
+    const response = await get(`${envConfig.bb2BaseUrl}/${db.settings.version}/fhir/Patient/`, req.query, `${loggedInUser.authToken?.accessToken}`);
+    res.json(response.data);
 }
 
 export async function getCoverageData(req: Request, res: Response) {
-  const envConfig = config[db.settings.env];
-  const BB2_COVERAGE_URL = `${envConfig.bb2BaseUrl}/${db.settings.version}/fhir/Coverage/`;
-
-  const response = await axios.get(BB2_COVERAGE_URL, {
-    params: req.query,
-    headers: getBearerHeader(),
-  });
-
-  res.json(response.data);
+    const loggedInUser = getLoggedInUser(db);
+    const envConfig = config[db.settings.env];
+    // get Coverage end point
+    const response = await get(`${envConfig.bb2BaseUrl}/${db.settings.version}/fhir/Coverage/`, req.query, `${loggedInUser.authToken?.accessToken}`);
+    res.json(response.data);
 }
 
 export async function getUserProfileData(req: Request, res: Response) {
-  const envConfig = config[db.settings.env];
-  const BB2_BENEFIT_URL = `${envConfig.bb2BaseUrl}/${db.settings.version}/connect/userinfo`;
-
-  const response = await axios.get(BB2_BENEFIT_URL, {
-    params: req.query,
-    headers: getBearerHeader(),
-  });
-
-  res.json(response.data);
+    const loggedInUser = getLoggedInUser(db);
+    const envConfig = config[db.settings.env];
+    // get usrinfo end point
+    const response = await get(`${envConfig.bb2BaseUrl}/${db.settings.version}/connect/userinfo`, req.query, `${loggedInUser.authToken?.accessToken}`);
+    res.json(response.data);
 }
 
 const router = Router();

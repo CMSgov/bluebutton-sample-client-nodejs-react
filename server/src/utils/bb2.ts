@@ -1,9 +1,9 @@
-import axios from 'axios';
 import FormData from 'form-data';
 import db from './db';
 import config from '../configs/config';
 import { generateCodeChallenge, generateRandomState } from './generatePKCE';
-import AuthorizationToken from '../entities/AuthorizationToken';
+import { post, postWithConfig } from './request'
+import AuthorizationToken from '@entities/AuthorizationToken';
 
 export function generateAuthorizeUrl(): string {
   const envConfig = config[db.settings.env];
@@ -32,7 +32,7 @@ export function generateAuthorizeUrl(): string {
 export async function getAccessToken(code: string, state: string | undefined) {
   const envConfig = config[db.settings.env];
   const BB2_ACCESS_TOKEN_URL = `${envConfig.bb2BaseUrl}/${db.settings.version}/o/token/`;
-
+    
   const form = new FormData();
   form.append('client_id', envConfig.bb2ClientId);
   form.append('client_secret', envConfig.bb2ClientSecret);
@@ -45,7 +45,7 @@ export async function getAccessToken(code: string, state: string | undefined) {
     form.append('code_verifier', codeChallenge.verifier);
     form.append('code_challenge', codeChallenge.codeChallenge);
   }
-  return axios.post(BB2_ACCESS_TOKEN_URL, form, { headers: form.getHeaders() });
+  return await post(BB2_ACCESS_TOKEN_URL, form, form.getHeaders());
 }
 
 export async function refreshAccessToken(refreshToken: string) {
@@ -53,19 +53,19 @@ export async function refreshAccessToken(refreshToken: string) {
 
   const BB2_ACCESS_TOKEN_URL = `${envConfig.bb2BaseUrl}/${db.settings.version}/o/token/`;
 
-  const tokenResponse = await axios({
-    method: 'post',
-    url: BB2_ACCESS_TOKEN_URL,
-    auth: {
-      username: envConfig.bb2ClientId,
-      password: envConfig.bb2ClientSecret,
-    },
-    params: {
-      grant_type: 'refresh_token',
-      client_id: envConfig.bb2ClientId,
-      refresh_token: refreshToken,
-    },
-  });
+    const tokenResponse = await postWithConfig({
+        method: 'post',
+        url: BB2_ACCESS_TOKEN_URL,
+        auth: {
+            username: envConfig.bb2ClientId,
+            password: envConfig.bb2ClientSecret
+        },
+        params: {
+            'grant_type': 'refresh_token',
+            'client_id': envConfig.bb2ClientId,
+            'refresh_token': refreshToken
+        }
+    });
 
   return new AuthorizationToken(tokenResponse.data);
 }
