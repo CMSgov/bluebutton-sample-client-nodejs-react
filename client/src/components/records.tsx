@@ -76,17 +76,27 @@ export default function Records() {
                             amount: resource.item[0]?.adjudication[7]?.amount?.value || '0'
                         }
                     });
+
                     setRecords(records);
-                    const diagnosisRecords: DiagnosisRecord[] = beneData.eobData.entry.map((resourceData: any) => {
+
+                    const diagnosisRecords: DiagnosisRecord[] = beneData.eobData.entry.filter((resourceData: any) => {
                         const resource = resourceData.resource;
-                        return {
-                            id: resource.id,
-                            sequence: resource.diagnosis[0]?.sequence || 'Unknown',
-                            diagnosisCode: resource.diagnosis[0]?.diagnosisCodeableConcept?.coding[0]?.code || 'Unknown Diagnosis Coding Code',
-                            diagnosisDisplay: resource.diagnosis[0]?.diagnosisCodeableConcept?.coding[0]?.display || 'Unknown Diagnosis Coding Display',
-                            typeCode: resource.diagnosis[0]?.type[0]?.coding[0]?.code || 'Unknown Type Coding Code',
-                            typeDisplay: resource.diagnosis[0]?.type[0]?.coding[0]?.display || 'Unknown Type Coding Display',
+                        if (resource.diagnosis) {
+                            return true;
                         }
+                        else {
+                            return false;
+                        }
+                    }).map((resourceData: any) => {
+                        const resource = resourceData.resource;
+                            return {
+                                id: resource.id,
+                                sequence: resource?.diagnosis[0]?.sequence || 'Unknown',
+                                diagnosisCode: resource?.diagnosis[0]?.diagnosisCodeableConcept?.coding[0]?.code || 'Unknown',
+                                diagnosisDisplay: resource?.diagnosis[0]?.diagnosisCodeableConcept?.coding[0]?.display || 'Unknown',
+                                typeCode: resource?.diagnosis[0]?.type[0]?.coding[0]?.code || 'Unknown',
+                                typeDisplay: resource?.diagnosis[0]?.type[0]?.coding[0]?.display || 'Unknown',
+                            }
                     });
                     setDiagnosis(diagnosisRecords);
                 }
@@ -109,12 +119,23 @@ export default function Records() {
                 if (beneData.coverage && beneData.coverage.entry) {
                     const records: CoverageRecord[] = beneData.coverage.entry.map((resourceData: any) => {
                         const resource = resourceData.resource;
-                        return {
-                            id: resource.id,
-                            subscriberId: resource?.subscriberId || 'Unknown',
-                            status: resource?.status || 'Unknown Status',
-                            beneRef: resource?.beneficiary?.reference || 'Unknown Beneficiary',
-                            payor: resource?.payor[0]?.identifier?.value || 'Unknown Payor',
+                        if (resource.payor) {
+                            return {
+                                id: resource.id,
+                                subscriberId: resource?.subscriberId || 'Unknown',
+                                status: resource?.status || 'Unknown Status',
+                                beneRef: resource?.beneficiary?.reference || 'Unknown Beneficiary',
+                                payor: resource?.payor[0]?.identifier?.value || 'Unknown Payor',
+                            }
+                        }
+                        else {
+                            return {
+                                id: resource.id,
+                                subscriberId: resource?.subscriberId || 'Undefined',
+                                status: resource?.status || 'Undefined',
+                                beneRef: resource?.beneficiary?.reference || 'Undefined',
+                                payor: 'Undefined',
+                            }
                         }
                     });
                     setCoverages(records);

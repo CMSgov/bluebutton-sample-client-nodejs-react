@@ -72,8 +72,7 @@ export async function authorizationCallback(req: Request, res: Response) {
         * This is where you could also use a data service or other exception handling
         * to display or store the error
          */
-        console.log(e);
-        logger.info(e)
+        logger.err(e)
     }
         /* DEVELOPER NOTE:
          * This is a hardcoded redirect, but this should be used from settings stored in a conf file

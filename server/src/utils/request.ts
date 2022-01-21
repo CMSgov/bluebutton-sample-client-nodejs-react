@@ -1,5 +1,6 @@
 import axios from 'axios';
 import FormData from 'form-data';
+import logger from '@shared/Logger';
 
 export async function post(endpoint_url: string, data: FormData, headers: any) {
     return await request({ 
@@ -9,7 +10,7 @@ export async function post(endpoint_url: string, data: FormData, headers: any) {
         headers: headers}, true);
 }
 
-export async function post_w_config(config: any) {
+export async function postWithConfig(config: any) {
     return await request(config, false);
 }
 
@@ -30,15 +31,15 @@ export async function request(config: any, retryFlag: boolean) {
     } catch (error: any) {
         // DEVELOPER NOTES:
         // here handle errors per ErrorResponses.md
-        console.log('Error message: [', error.message, ']');
+        logger.info('Error message: [' + error.message + ']');
         if (error.response) {
-            console.log("response code: " + error.response.status)
-            console.log("response text: " + JSON.stringify(error.response.data))
+            logger.info("response code: " + error.response.status)
+            logger.info("response text: " + JSON.stringify(error.response.data))
             // DEVELOPER NOTES:
             // check for retryable (e.g. 500 & fhir) errors and do retrying...
             if (retryFlag && isRetryable(error)) {
-                console.log("Request failed and is retryable, entering retry process...")
-                var retryResp = await do_retry(config)
+                logger.info("Request failed and is retryable, entering retry process...")
+                var retryResp = await doRetry(config)
                 if (retryResp) {
                     resp = retryResp;
                 }
@@ -51,11 +52,8 @@ export async function request(config: any, retryFlag: boolean) {
             // something went wrong on sender side, not retryable
             // error.request is an instance of XMLHttpRequest in the browser and an instance of
             // http.ClientRequest in node.js
-            console.log("error.request: " + error.request);
+            logger.info("error.request: " + error.request);
         }
-        // dump axios config for diagnosis
-        // console.log("config:")
-        // console.log(error.config);
     }
     return resp    
 }
@@ -71,25 +69,25 @@ function isRetryable(error: any) {
 
 // for demo: retry init-interval = 5 sec, max attempt 3, with retry interval = init-interval * (2 ** n)
 // where n retry attempted
-async function do_retry(config: any) {
+async function doRetry(config: any) {
     const interval = 5
-    const max_attempts = 3
+    const maxAttempts = 3
     var resp = null
-    for (let i = 0; i < max_attempts; i++) {
-        var wait_in_sec = interval * (2 ** i)
-        console.log("wait ", wait_in_sec, " seconds...")
-        await sleep(wait_in_sec * 1000)
-        console.log("retry attempts: ", i+1)
+    for (let i = 0; i < maxAttempts; i++) {
+        var waitInSec = interval * (2 ** i)
+        logger.info("wait " + waitInSec + " seconds...")
+        await sleep(waitInSec * 1000)
+        logger.info("retry attempts: " + (i+1))
         try {
             resp = await axios(config);
-            console.log("retry successful:")
-            console.log(resp.data);
+            logger.info("retry successful:")
+            logger.info(resp.data);
             break;
         } catch (error: any) {
-            console.log("retry error: [", JSON.stringify(error.message), "]")
+            logger.info("retry error: [" + JSON.stringify(error.message) + "]")
             if (error.response) {
-                console.log("response code: ", error.response.status)
-                console.log("response data: ", error.response.data)
+                logger.info("response code: " + error.response.status)
+                logger.info("response data: " + error.response.data)
                 resp = error.response
             }
         }

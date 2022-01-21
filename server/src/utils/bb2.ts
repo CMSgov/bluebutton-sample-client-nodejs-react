@@ -1,10 +1,9 @@
-import axios from 'axios';
 import FormData from 'form-data';
 
 import db from './db';
 import config from '../configs/config';
 import { generateCodeChallenge, generateRandomState } from './generatePKCE';
-import { post, post_w_config } from './request'
+import { post, postWithConfig } from './request'
 import AuthorizationToken from '@entities/AuthorizationToken';
 
 export function generateAuthorizeUrl(): string {
@@ -56,7 +55,7 @@ export async function refreshAccessToken(refreshToken: string) {
 
     const BB2_ACCESS_TOKEN_URL = envConfig.bb2BaseUrl + '/' + db.settings.version + '/o/token/';
 
-    const tokenResponse = await post_w_config({
+    const tokenResponse = await postWithConfig({
         method: 'post',
         url: BB2_ACCESS_TOKEN_URL,
         auth: {
