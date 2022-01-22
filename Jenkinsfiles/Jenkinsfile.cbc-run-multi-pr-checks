@@ -54,7 +54,7 @@ pipeline {
     stage("ESLint client") {
       steps{
         sh """
-          cd client;node_modules/.bin/eslint -c eslintrc.json src/**/*.ts
+          cd client;node_modules/.bin/eslint -c eslintrc.json src/**/*.tsx src/*.tsx
         """
       }
     }

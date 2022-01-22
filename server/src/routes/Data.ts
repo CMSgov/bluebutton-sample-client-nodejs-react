@@ -1,18 +1,11 @@
 import { Router, Request, Response } from 'express';
 import moment from 'moment';
+import { getLoggedInUser } from '../utils/user';
+import { refreshAccessToken } from '../utils/bb2';
 import config from '../configs/config';
 import db from '../utils/db';
-import { get } from '../utils/request'
-import { getLoggedInUser } from 'src/utils/user';
-import { refreshAccessToken } from 'src/utils/bb2';
+import { get } from '../utils/request';
 
-// function getBearerHeader() {
-//     const loggedInUser = getLoggedInUser(db);
-//     return {
-//       Authorization: `Bearer ${loggedInUser?.authToken?.accessToken || 'Invalid Token'}`,
-//     };
-//   }
-  
 /* DEVELOPER NOTES:
 * This is our mocked Data Service layer for both the BB2 API
 * as well as for our mocked db Service Layer
@@ -42,14 +35,11 @@ export async function getBenefitData(req: Request) {
   const response = await get(BB2_BENEFIT_URL, req.query, `${loggedInUser.authToken?.accessToken}`);
 
   if (response.status === 200) {
-    return response.data;
+    return response.data as unknown;
   }
-  else {
-    // send generic error to client
-    return JSON.parse('{"message": "Unable to load EOB Data - fetch FHIR resource error."}');
-  }
-  
-  return response;
+
+  // send generic error to client
+  return JSON.parse('{"message": "Unable to load EOB Data - fetch FHIR resource error."}') as unknown;
 }
 
 /*
@@ -60,49 +50,49 @@ export async function getBenefitData(req: Request) {
 *  DB you would choose to use
 */
 export async function getBenefitDataEndPoint(req: Request, res: Response) {
-    const loggedInUser = getLoggedInUser(db);
-    const data = loggedInUser.eobData;
-    if ( data ) {
-        res.json(data)
-    }
+  const loggedInUser = getLoggedInUser(db);
+  const data = loggedInUser.eobData;
+  if (data) {
+    res.json(data);
+  }
 }
 
 export async function getPatientData(req: Request, res: Response) {
-    const loggedInUser = getLoggedInUser(db);
-    const envConfig = config[db.settings.env];
-    // get Patient end point
-    const response = await get(`${envConfig.bb2BaseUrl}/${db.settings.version}/fhir/Patient/`, req.query, `${loggedInUser.authToken?.accessToken}`);
-    res.json(response.data);
+  const loggedInUser = getLoggedInUser(db);
+  const envConfig = config[db.settings.env];
+  // get Patient end point
+  const response = await get(`${envConfig.bb2BaseUrl}/${db.settings.version}/fhir/Patient/`, req.query, `${loggedInUser.authToken?.accessToken || 'no access token'} `);
+  res.json(response.data);
 }
 
 export async function getCoverageData(req: Request, res: Response) {
-    const loggedInUser = getLoggedInUser(db);
-    const envConfig = config[db.settings.env];
-    // get Coverage end point
-    const response = await get(`${envConfig.bb2BaseUrl}/${db.settings.version}/fhir/Coverage/`, req.query, `${loggedInUser.authToken?.accessToken}`);
-    res.json(response.data);
+  const loggedInUser = getLoggedInUser(db);
+  const envConfig = config[db.settings.env];
+  // get Coverage end point
+  const response = await get(`${envConfig.bb2BaseUrl}/${db.settings.version}/fhir/Coverage/`, req.query, `${loggedInUser.authToken?.accessToken || 'no access token'}`);
+  res.json(response.data);
 }
 
 export async function getUserProfileData(req: Request, res: Response) {
-    const loggedInUser = getLoggedInUser(db);
-    const envConfig = config[db.settings.env];
-    // get usrinfo end point
-    const response = await get(`${envConfig.bb2BaseUrl}/${db.settings.version}/connect/userinfo`, req.query, `${loggedInUser.authToken?.accessToken}`);
-    res.json(response.data);
+  const loggedInUser = getLoggedInUser(db);
+  const envConfig = config[db.settings.env];
+  // get usrinfo end point
+  const response = await get(`${envConfig.bb2BaseUrl}/${db.settings.version}/connect/userinfo`, req.query, `${loggedInUser.authToken?.accessToken || 'no access token'}`);
+  res.json(response.data);
 }
 
 const router = Router();
 
 // turn off eslinting for below router get function - it's OK to call a async which return a promise
-// eslint-disable-next-line
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.get('/benefit', getBenefitDataEndPoint);
-// eslint-disable-next-line
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.get('/benefit-direct', getBenefitData);
-// eslint-disable-next-line
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.get('/patient', getPatientData);
-// eslint-disable-next-line
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.get('/coverage', getCoverageData);
-// eslint-disable-next-line
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.get('/userprofile', getUserProfileData);
 
 export default router;

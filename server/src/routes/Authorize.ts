@@ -1,11 +1,11 @@
 import { Router, Request, Response } from 'express';
+import { clearBB2Data, getLoggedInUser } from '../utils/user';
 import logger from '../shared/Logger';
 import AuthorizationToken from '../entities/AuthorizationToken';
 import Settings from '../entities/Settings';
 import db from '../utils/db';
 import { getAccessToken, generateAuthorizeUrl } from '../utils/bb2';
 import { getBenefitData } from './Data';
-import { clearBB2Data, getLoggedInUser } from 'src/utils/user';
 
 const BENE_DENIED_ACCESS = 'access_denied';
 
@@ -26,12 +26,13 @@ export async function authorizationCallback(req: Request, res: Response) {
       throw new Error('State is required when using PKCE');
     }
 
-    // this gets the token from Medicare.gov once the 'user' authenticates their Medicare.gov account
+    // this gets the token from Medicare.gov once the 'user'
+    // authenticates their Medicare.gov account
     const response = await getAccessToken(req.query.code?.toString(), req.query.state?.toString());
-    
+
     if (!response.data) {
-        throw new Error('Error get access token');
-        }
+      throw new Error('Error get access token');
+    }
 
     const loggedInUser = getLoggedInUser(db);
 
@@ -41,8 +42,8 @@ export async function authorizationCallback(req: Request, res: Response) {
        * This is where you would most likely place some type of
        * persistence service/functionality to store the token along with
        * the application user identifiers
-       */        
-    
+       */
+
       // Here we are grabbing the mocked 'user' for our application
       // to be able to store the access token for that user
       // thereby linking the 'user' of our sample applicaiton with their Medicare.gov account
@@ -50,26 +51,25 @@ export async function authorizationCallback(req: Request, res: Response) {
       loggedInUser.authToken = authToken;
 
       /* DEVELOPER NOTES:
-       * Here we will use the token to get the EoB data for the mocked 'user' of the sample application
-       * then to save trips to the BB2 API we will store it in the mocked db with the mocked 'user'
+       * Here we will use the token to get the EoB data for the mocked 'user' of the sample
+       * application then to save trips to the BB2 API we will store it in the mocked db
+       * with the mocked 'user'
        *
        * You could also request data for the Patient endpoint and/or the Coverage endpoint here
        * using similar functionality
        */
       const eobData = await getBenefitData(req);
       loggedInUser.eobData = eobData;
+    } else {
+      // send generic error message to FE
+      loggedInUser.eobData = JSON.parse('{"message": "Unable to load EOB Data - authorization failed."}');
     }
-    else {
-        // send generic error message to FE
-        loggedInUser.eobData = JSON.parse('{"message": "Unable to load EOB Data - authorization failed."}');
-    }
-
   } catch (e) {
     /* DEVELOPER NOTES:
      * This is where you could also use a data service or other exception handling
      * to display or store the error
      */
-     logger.err(e)
+    logger.err(e);
   }
   /* DEVELOPER NOTE:
    * This is a hardcoded redirect, but this should be used from settings stored in a conf file
@@ -99,11 +99,11 @@ export async function getCurrentAuthToken(req: Request, res: Response) {
 
 const router = Router();
 
-// eslint-disable-next-line
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.get('/bluebutton/callback', authorizationCallback);
-// eslint-disable-next-line
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.get('/authorize/authurl', getAuthUrl);
-// eslint-disable-next-line
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.get('/authorize/currentAuthToken', getCurrentAuthToken);
 
 export default router;
