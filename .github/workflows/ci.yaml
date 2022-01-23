@@ -1,0 +1,37 @@
+name: CI for Node.js React Sample App
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+jobs:
+  build:
+      runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v2
+
+    - uses: actions/setup-node@v2
+      with:
+        node-version: 14
+
+    - name: Install Sample App server component
+      run: yarn --cwd server install 
+
+    - name: Install Sample App client component
+      run: yarn --cwd client install 
+
+    - name: Run eslint on server source files
+      uses: tj-actions/eslint-changed-files@v8.6
+      with:
+        config_path: "./server/eslintrc.json"
+        ignore_path: "./server/.eslintignore"
+        extensions: "ts,tsx,js,jsx"
+        extra_args: "--max-warnings=0"
+
+    - name: Run eslint on client source files
+      uses: tj-actions/eslint-changed-files@v8.6
+      with:
+        config_path: "./client/eslintrc.json"
+        ignore_path: "./client/.eslintignore"
+        extensions: "ts,tsx,js,jsx"
+        extra_args: "--max-warnings=0"
