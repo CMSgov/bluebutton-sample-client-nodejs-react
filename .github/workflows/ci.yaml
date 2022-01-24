@@ -21,3 +21,6 @@ jobs:
 
     - name: Lint client source
       run: yarn --cwd client lint 
+
+    - name: Run server tests
+      run: yarn --cwd server test 
