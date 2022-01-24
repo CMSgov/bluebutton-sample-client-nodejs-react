@@ -39,7 +39,8 @@ export async function getBenefitData(req: Request) {
   }
 
   // send generic error to client
-  return JSON.parse('{"message": "Unable to load EOB Data - fetch FHIR resource error."}') as unknown;
+  const general_err = '{"message": "Unable to load EOB Data - fetch FHIR resource error."}';
+  return JSON.parse(general_err) as unknown;
 }
 
 /*
@@ -49,7 +50,7 @@ export async function getBenefitData(req: Request) {
 * This would be replaced by a persistence service layer for whatever
 *  DB you would choose to use
 */
-export async function getBenefitDataEndPoint(req: Request, res: Response) {
+export function getBenefitDataEndPoint(req: Request, res: Response) {
   const loggedInUser = getLoggedInUser(db);
   const data = loggedInUser.eobData;
   if (data) {
@@ -61,7 +62,9 @@ export async function getPatientData(req: Request, res: Response) {
   const loggedInUser = getLoggedInUser(db);
   const envConfig = config[db.settings.env];
   // get Patient end point
-  const response = await get(`${envConfig.bb2BaseUrl}/${db.settings.version}/fhir/Patient/`, req.query, `${loggedInUser.authToken?.accessToken || 'no access token'} `);
+  const response = await get(`${envConfig.bb2BaseUrl}/${db.settings.version}/fhir/Patient/`,
+                             req.query,
+                             `${loggedInUser.authToken?.accessToken || 'no access token'} `);
   res.json(response.data);
 }
 
@@ -69,7 +72,9 @@ export async function getCoverageData(req: Request, res: Response) {
   const loggedInUser = getLoggedInUser(db);
   const envConfig = config[db.settings.env];
   // get Coverage end point
-  const response = await get(`${envConfig.bb2BaseUrl}/${db.settings.version}/fhir/Coverage/`, req.query, `${loggedInUser.authToken?.accessToken || 'no access token'}`);
+  const response = await get(`${envConfig.bb2BaseUrl}/${db.settings.version}/fhir/Coverage/`,
+                             req.query,
+                             `${loggedInUser.authToken?.accessToken || 'no access token'}`);
   res.json(response.data);
 }
 
@@ -77,15 +82,16 @@ export async function getUserProfileData(req: Request, res: Response) {
   const loggedInUser = getLoggedInUser(db);
   const envConfig = config[db.settings.env];
   // get usrinfo end point
-  const response = await get(`${envConfig.bb2BaseUrl}/${db.settings.version}/connect/userinfo`, req.query, `${loggedInUser.authToken?.accessToken || 'no access token'}`);
+  const response = await get(`${envConfig.bb2BaseUrl}/${db.settings.version}/connect/userinfo`,
+                             req.query,
+                             `${loggedInUser.authToken?.accessToken || 'no access token'}`);
   res.json(response.data);
 }
 
 const router = Router();
 
-// turn off eslinting for below router get function - it's OK to call a async which return a promise
-// eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.get('/benefit', getBenefitDataEndPoint);
+// turn off eslinting for below router get function - it's OK to call a async which return a promise
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.get('/benefit-direct', getBenefitData);
 // eslint-disable-next-line @typescript-eslint/no-misused-promises

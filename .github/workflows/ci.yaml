@@ -1,9 +1,5 @@
 name: CI for Node.js React Sample App
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+on: [push]
 jobs:
   build:
       runs-on: ubuntu-latest
@@ -14,24 +10,14 @@ jobs:
       with:
         node-version: 14
 
-    - name: Install Sample App server component
+    - name: Install server
       run: yarn --cwd server install 
 
-    - name: Install Sample App client component
+    - name: Install client
       run: yarn --cwd client install 
 
-    - name: Run eslint on server source files
-      uses: tj-actions/eslint-changed-files@v8.6
-      with:
-        config_path: "./server/eslintrc.json"
-        ignore_path: "./server/.eslintignore"
-        extensions: "ts,tsx,js,jsx"
-        extra_args: "--max-warnings=0"
+    - name: Lint server source
+      run: yarn --cwd server lint 
 
-    - name: Run eslint on client source files
-      uses: tj-actions/eslint-changed-files@v8.6
-      with:
-        config_path: "./client/eslintrc.json"
-        ignore_path: "./client/.eslintignore"
-        extensions: "ts,tsx,js,jsx"
-        extra_args: "--max-warnings=0"
+    - name: Lint client source
+      run: yarn --cwd client lint 

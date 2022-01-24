@@ -62,7 +62,8 @@ export async function authorizationCallback(req: Request, res: Response) {
       loggedInUser.eobData = eobData;
     } else {
       // send generic error message to FE
-      loggedInUser.eobData = JSON.parse('{"message": "Unable to load EOB Data - authorization failed."}');
+      const general_err = '{"message": "Unable to load EOB Data - authorization failed."}';
+      loggedInUser.eobData = JSON.parse(general_err);
     }
   } catch (e) {
     /* DEVELOPER NOTES:
@@ -78,7 +79,7 @@ export async function authorizationCallback(req: Request, res: Response) {
   res.redirect('http://localhost:3000');
 }
 
-export async function getAuthUrl(req: Request, res: Response) {
+export function getAuthUrl(req: Request, res: Response) {
   /* DEVELOPER NOTE:
     * to utilize the latest security features/best practices
     * it is recommended to utilize pkce
@@ -92,7 +93,7 @@ export async function getAuthUrl(req: Request, res: Response) {
   res.send(generateAuthorizeUrl());
 }
 
-export async function getCurrentAuthToken(req: Request, res: Response) {
+export function getCurrentAuthToken(req: Request, res: Response) {
   const loggedInUser = getLoggedInUser(db);
   res.send(loggedInUser.authToken);
 }
@@ -101,9 +102,7 @@ const router = Router();
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.get('/bluebutton/callback', authorizationCallback);
-// eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.get('/authorize/authurl', getAuthUrl);
-// eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.get('/authorize/currentAuthToken', getCurrentAuthToken);
 
 export default router;
