@@ -6,7 +6,7 @@ import { Badge } from '@cmsgov/design-system';
                 </Link>
 */
 
-export default function Header({ }) {
+export default function Header() {
     return (
         <header className="ds-u-padding--3 ds-u-sm-padding--6 ds-u-display--block ds-u-fill--primary-darkest">
             <h1 className="ds-u-margin--0 ds-u-color--white ds-u-text-align--center">

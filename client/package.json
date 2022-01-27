@@ -13,7 +13,7 @@
     "web-vitals": "^2.1.3"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "REACT_APP_CTX=docker react-scripts start",
     "start:native": "REACT_APP_CTX=native react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
