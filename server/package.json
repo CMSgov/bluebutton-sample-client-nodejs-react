@@ -7,7 +7,7 @@
         "start": "node -r module-alias/register ./dist --env=production",
         "start:debug": "node --inspect=0.0.0.0:9229 ./node_modules/.bin/ts-node -r tsconfig-paths/register ./src",
         "start:dev": "nodemon",
-        "test": "mocha --exit -r ts-node/register spec/*.spec.ts"
+        "test": "mocha --exit -r tsconfig-paths/register -r ts-node/register src/test/*.spec.ts"
     },
     "nodemonConfig": {
         "watch": [
@@ -23,6 +23,7 @@
         "@daos": "dist/daos",
         "@entities": "dist/entities",
         "@shared": "dist/shared",
+        "@configs": "dist/configs",
         "@server": "dist/Server"
     },
     "eslintConfig": {

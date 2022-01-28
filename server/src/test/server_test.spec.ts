@@ -3,8 +3,8 @@ import 'mocha';
 import nock from 'nock';
 
 import chaiHttp from 'chai-http';
-import app from '../src/Server';
-import logger from '../src/shared/Logger';
+import logger from '@shared/Logger';
+import app from '@server';
 
 chai.use(chaiHttp);
 

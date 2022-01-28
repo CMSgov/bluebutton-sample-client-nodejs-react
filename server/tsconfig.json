@@ -68,6 +68,9 @@
             "@shared/*": [
                 "src/shared/*"
             ],
+            "@configs/*": [
+                "src/configs/*"
+            ],
             "@server": [
                 "src/Server"
             ]

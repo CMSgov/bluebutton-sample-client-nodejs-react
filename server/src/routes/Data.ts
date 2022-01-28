@@ -2,9 +2,15 @@ import { Router, Request, Response } from 'express';
 import moment from 'moment';
 import { getLoggedInUser } from '../utils/user';
 import { refreshAccessToken } from '../utils/bb2';
-import config from '../configs/config';
+import config from '@configs/config';
 import db from '../utils/db';
 import { get } from '../utils/request';
+
+const envConfig = config[db.settings.env];
+
+function getURL(path: string): string {
+    return `${String(envConfig.bb2BaseUrl)}/${db.settings.version}/${path}`;
+}
 
 /* DEVELOPER NOTES:
 * This is our mocked Data Service layer for both the BB2 API
@@ -16,9 +22,8 @@ import { get } from '../utils/request';
 // user and returned - we are then storing in a mocked DB
 export async function getBenefitData(req: Request) {
   const loggedInUser = getLoggedInUser(db);
-  const envConfig = config[db.settings.env];
   const FHIR_EOB_PATH = 'fhir/ExplanationOfBenefit/';
-  const BB2_BENEFIT_URL = `${envConfig.bb2BaseUrl}/${db.settings.version}/${FHIR_EOB_PATH}`;
+  const BB2_BENEFIT_URL = getURL(FHIR_EOB_PATH);
 
   if (!loggedInUser.authToken || !loggedInUser.authToken.accessToken) {
     return { data: {} };
@@ -60,9 +65,8 @@ export function getBenefitDataEndPoint(req: Request, res: Response) {
 
 export async function getPatientData(req: Request, res: Response) {
   const loggedInUser = getLoggedInUser(db);
-  const envConfig = config[db.settings.env];
   // get Patient end point
-  const response = await get(`${envConfig.bb2BaseUrl}/${db.settings.version}/fhir/Patient/`,
+  const response = await get(getURL('fhir/Patient/'),
                              req.query,
                              `${loggedInUser.authToken?.accessToken || 'no access token'} `);
   res.json(response.data);
@@ -70,9 +74,8 @@ export async function getPatientData(req: Request, res: Response) {
 
 export async function getCoverageData(req: Request, res: Response) {
   const loggedInUser = getLoggedInUser(db);
-  const envConfig = config[db.settings.env];
   // get Coverage end point
-  const response = await get(`${envConfig.bb2BaseUrl}/${db.settings.version}/fhir/Coverage/`,
+  const response = await get(getURL('fhir/Coverage/'),
                              req.query,
                              `${loggedInUser.authToken?.accessToken || 'no access token'}`);
   res.json(response.data);
@@ -80,9 +83,8 @@ export async function getCoverageData(req: Request, res: Response) {
 
 export async function getUserProfileData(req: Request, res: Response) {
   const loggedInUser = getLoggedInUser(db);
-  const envConfig = config[db.settings.env];
   // get usrinfo end point
-  const response = await get(`${envConfig.bb2BaseUrl}/${db.settings.version}/connect/userinfo`,
+  const response = await get(getURL('connect/userinfo'),
                              req.query,
                              `${loggedInUser.authToken?.accessToken || 'no access token'}`);
   res.json(response.data);
