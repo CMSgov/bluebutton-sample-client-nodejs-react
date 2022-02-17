@@ -6,6 +6,8 @@
 
 import Logger from 'jet-logger';
 
-const logger = new Logger();
+// throw error: src/shared/Logger.ts(9,20): error TS2351: This expression is not constructable.
+// const logger = new Logger();
+const logger = Logger;
 
 export default logger;
