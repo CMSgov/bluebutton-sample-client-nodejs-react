@@ -17,6 +17,8 @@ export interface User {
     authToken?: AuthorizationToken,
     userInfo: UserInfo,
     eobData?: any,
+    patient?: any,
+    coverage?: any,
     errors: string[]
 }
 export interface DB {

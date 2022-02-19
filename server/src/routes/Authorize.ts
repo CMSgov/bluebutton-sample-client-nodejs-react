@@ -3,7 +3,7 @@ import AuthorizationToken from '../entities/AuthorizationToken';
 import Settings from '../entities/Settings';
 import db from '../utils/db';
 import { getAccessToken, generateAuthorizeUrl } from '../utils/bb2';
-import { getBenefitData } from './Data';
+import { getExplanationOfBenefitData, getPatientJSON, getCoverageJSON } from './Data';
 import logger from '@shared/Logger';
 import { clearBB2Data, getLoggedInUser } from 'src/utils/user';
 
@@ -56,12 +56,15 @@ export async function authorizationCallback(req: Request, res: Response) {
             * You could also request data for the Patient endpoint and/or the Coverage endpoint here
             * using similar functionality
             */
-            const eobData = await getBenefitData( req, res);
-            loggedInUser.eobData = eobData;
+            loggedInUser.eobData = await getExplanationOfBenefitData( req, res);
+            loggedInUser.patient = await getPatientJSON( req, res);
+            loggedInUser.coverage = await getCoverageJSON( req, res);
         }
         else {
             // send generic error message to FE
             loggedInUser.eobData = JSON.parse('{"message": "Unable to load EOB Data - authorization failed."}');
+            loggedInUser.patient = JSON.parse('{"message": "Unable to load Patient Data - authorization failed."}');
+            loggedInUser.coverage = JSON.parse('{"message": "Unable to load Coverage Data - authorization failed."}');
         }
 
     } catch (e) {

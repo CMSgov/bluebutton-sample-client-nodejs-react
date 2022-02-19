@@ -14,4 +14,6 @@ export function getLoggedInUser(db : DB) {
 export function clearBB2Data(user: User) {
     user.authToken = undefined;
     user.eobData = undefined;
+    user.patient = undefined;
+    user.coverage = undefined;
 }

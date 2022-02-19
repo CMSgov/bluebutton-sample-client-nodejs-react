@@ -14,7 +14,7 @@ import { refreshAccessToken } from 'src/utils/bb2';
 
 // this function is used to query eob data for the authenticated Medicare.gov
 // user and returned - we are then storing in a mocked DB
-export async function getBenefitData(req: Request, res: Response) {
+export async function getExplanationOfBenefitData(req: Request, res: Response) {
     const loggedInUser = getLoggedInUser(db);
     const envConfig = config[db.settings.env];
     const BB2_BENEFIT_URL = envConfig.bb2BaseUrl + '/' + db.settings.version + '/fhir/ExplanationOfBenefit/';
@@ -49,28 +49,44 @@ export async function getBenefitData(req: Request, res: Response) {
 * This would be replaced by a persistence service layer for whatever
 *  DB you would choose to use
 */
-export async function getBenefitDataEndPoint(req: Request, res: Response) {
+export async function getBeneficiaryDataEndPoint(req: Request, res: Response) {
     const loggedInUser = getLoggedInUser(db);
-    const data = loggedInUser.eobData;
-    if ( data ) {
-        res.json(data)
+    const beneData = {'eobData': loggedInUser.eobData, 'patient': loggedInUser.patient, 'coverage': loggedInUser.coverage};
+    if ( beneData ) {
+        res.json(beneData);
     }
 }
 
 export async function getPatientData(req: Request, res: Response) {
+    // const loggedInUser = getLoggedInUser(db);
+    // const envConfig = config[db.settings.env];
+    // get Patient end point
+    const data = await getPatientJSON(req, res);
+    res.json(data);
+}
+
+export async function getPatientJSON(req: Request, res: Response) {
     const loggedInUser = getLoggedInUser(db);
     const envConfig = config[db.settings.env];
     // get Patient end point
     const response = await get(`${envConfig.bb2BaseUrl}/${db.settings.version}/fhir/Patient/`, req.query, `${loggedInUser.authToken?.access_token}`);
-    res.json(response.data);
+    return response.data;
 }
 
 export async function getCoverageData(req: Request, res: Response) {
+    // const loggedInUser = getLoggedInUser(db);
+    // const envConfig = config[db.settings.env];
+    // get Coverage end point
+    const data = await getCoverageJSON(req, res);
+    res.json(data);
+}
+
+export async function getCoverageJSON(req: Request, res: Response) {
     const loggedInUser = getLoggedInUser(db);
     const envConfig = config[db.settings.env];
     // get Coverage end point
     const response = await get(`${envConfig.bb2BaseUrl}/${db.settings.version}/fhir/Coverage/`, req.query, `${loggedInUser.authToken?.access_token}`);
-    res.json(response.data);
+    return response.data;
 }
 
 export async function getUserProfileData(req: Request, res: Response) {
@@ -83,7 +99,8 @@ export async function getUserProfileData(req: Request, res: Response) {
 
 const router = Router();
 
-router.get('/benefit', getBenefitDataEndPoint);
+router.get('/beneficiary_data', getBeneficiaryDataEndPoint);
+router.get('/eob', getExplanationOfBenefitData);
 router.get('/patient', getPatientData);
 router.get('/coverage', getCoverageData);
 router.get('/userprofile', getUserProfileData);
