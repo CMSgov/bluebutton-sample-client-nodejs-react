@@ -1,7 +1,7 @@
 import FormData from 'form-data';
 import AuthorizationToken from '../entities/AuthorizationToken';
 import db from './db';
-import config from '@configs/config';
+import config from '../configs/config';
 import { generateCodeChallenge, generateRandomState } from './generatePKCE';
 import { post, postWithConfig } from './request';
 

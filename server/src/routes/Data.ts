@@ -2,7 +2,7 @@ import { Router, Request, Response } from 'express';
 import moment from 'moment';
 import { getLoggedInUser } from '../utils/user';
 import { refreshAccessToken } from '../utils/bb2';
-import config from '@configs/config';
+import config from '../configs/config';
 import db from '../utils/db';
 import { get } from '../utils/request';
 
@@ -20,11 +20,11 @@ function getURL(path: string): string {
 
 // this function is used to query eob data for the authenticated Medicare.gov
 // user and returned - we are then storing in a mocked DB
-export async function getBenefitData(req: Request) {
+export async function getBenefitData(req: Request, res: Response) {
   const loggedInUser = getLoggedInUser(db);
   const FHIR_EOB_PATH = 'fhir/ExplanationOfBenefit/';
   const BB2_BENEFIT_URL = getURL(FHIR_EOB_PATH);
-
+  
   if (!loggedInUser.authToken || !loggedInUser.authToken.accessToken) {
     return { data: {} };
   }
@@ -39,13 +39,7 @@ export async function getBenefitData(req: Request) {
 
   const response = await get(BB2_BENEFIT_URL, req.query, `${loggedInUser.authToken?.accessToken}`);
 
-  if (response.status === 200) {
-    return response.data as unknown;
-  }
-
-  // send generic error to client
-  const general_err = '{"message": "Unable to load EOB Data - fetch FHIR resource error."}';
-  return JSON.parse(general_err) as unknown;
+  res.json(response.data);
 }
 
 /*
