@@ -15,8 +15,6 @@ const BB2_EOB_URL = `${BB2_BASE_URL}/v2/fhir/ExplanationOfBenefit/`;
 
 const BB2_PROFILE_URL = `${BB2_BASE_URL}/v2/connect/userinfo`;
 
-const BB2_AUTH_TOKEN_URL = `${BB2_BASE_URL}/v2/o/token/`;
-
 const eob = { status: 200, data: { resource: "EOB" } };
 
 const coverage = { status: 200, data: { resource: "Coverage" } };
@@ -42,8 +40,7 @@ const MOCK_AUTH_TOKEN = new AuthorizationToken(MOCK_AUTH_TOKEN_RESPONSE.data);
 let server: any;
 
 beforeAll(() => {
-    server = app.listen(Number(3003), () => {
-    });
+    server = app.listen(Number(3003));
   });
   
 afterAll(() => {
@@ -52,7 +49,7 @@ afterAll(() => {
   
 test("expect patient end point returns patient data.", async () => {
   // mock patient returned at deeper layer
-  jest.spyOn(reqs, 'get').mockImplementation((url, params, token) =>
+  jest.spyOn(reqs, 'get').mockImplementation((url) =>
     {
         if (url === BB2_PATIENT_URL) {
           return Promise.resolve(patient);
@@ -70,7 +67,7 @@ test("expect patient end point returns patient data.", async () => {
 
 test("expect profile end point returns profile data.", async () => {
   // mock profile returned at lower level get
-  jest.spyOn(reqs, 'get').mockImplementation((url, params, token) =>
+  jest.spyOn(reqs, 'get').mockImplementation((url) =>
     {
       if (url === BB2_PROFILE_URL) {
         return Promise.resolve(profile);
@@ -86,7 +83,7 @@ test("expect profile end point returns profile data.", async () => {
 
 test("expect coverage end point returns coverage data.", async () => {
     // mock coverage returned at deeper layer
-    jest.spyOn(reqs, 'get').mockImplementation((url, params, token) =>
+    jest.spyOn(reqs, 'get').mockImplementation((url) =>
         {
             if (url === BB2_COVERAGE_URL) {
             return Promise.resolve(coverage);
@@ -108,7 +105,7 @@ test("expect eob end point returns eob data.", async () => {
     loggedInUser.authToken = MOCK_AUTH_TOKEN;
 
     // mock eob returned at lower level get
-    jest.spyOn(reqs, 'get').mockImplementation((url, params, token) =>
+    jest.spyOn(reqs, 'get').mockImplementation((url) =>
         {
           if (url === BB2_EOB_URL) {
             return Promise.resolve(eob);
@@ -119,7 +116,6 @@ test("expect eob end point returns eob data.", async () => {
     );
 
     const response = await axios.get("http://localhost:3003/api/data/benefit-direct");
-    console.log(response);
     expect(response.status).toEqual(200);
     expect(response.data).toEqual(eob.data);
 });
