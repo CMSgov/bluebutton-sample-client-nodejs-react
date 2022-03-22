@@ -1,10 +1,16 @@
 import { Router, Request, Response } from 'express';
+import moment from 'moment';
+import { getLoggedInUser } from '../utils/user';
+import { refreshAccessToken } from '../utils/bb2';
 import config from '../configs/config';
 import db from '../utils/db';
-import { getLoggedInUser } from 'src/utils/user';
-import { get } from '../utils/request'
-import moment from 'moment';
-import { refreshAccessToken } from 'src/utils/bb2';
+import { get } from '../utils/request';
+
+const envConfig = config[db.settings.env];
+
+function getURL(path: string): string {
+    return `${String(envConfig.bb2BaseUrl)}/${db.settings.version}/${path}`;
+}
 
 /* DEVELOPER NOTES:
 * This is our mocked Data Service layer for both the BB2 API
@@ -15,77 +21,80 @@ import { refreshAccessToken } from 'src/utils/bb2';
 // this function is used to query eob data for the authenticated Medicare.gov
 // user and returned - we are then storing in a mocked DB
 export async function getBenefitData(req: Request, res: Response) {
-    const loggedInUser = getLoggedInUser(db);
-    const envConfig = config[db.settings.env];
-    const BB2_BENEFIT_URL = envConfig.bb2BaseUrl + '/' + db.settings.version + '/fhir/ExplanationOfBenefit/';
+  const loggedInUser = getLoggedInUser(db);
+  const FHIR_EOB_PATH = 'fhir/ExplanationOfBenefit/';
+  const BB2_BENEFIT_URL = getURL(FHIR_EOB_PATH);
+  
+  if (!loggedInUser.authToken || !loggedInUser.authToken.accessToken) {
+    return { data: {} };
+  }
 
-    if (!loggedInUser.authToken || !loggedInUser.authToken.access_token) {
-        return {};
-    }
+  /*
+  * If the access token is expired, use the refresh token to generate a new one
+  */
+  if (moment(loggedInUser.authToken.expiresAt).isBefore(moment())) {
+    const newAuthToken = await refreshAccessToken(loggedInUser.authToken.refreshToken);
+    loggedInUser.authToken = newAuthToken;
+  }
 
-    /*
-    * If the access token is expired, use the refresh token to generate a new one
-    */
-    if (moment(loggedInUser.authToken.expires_at).isBefore(moment())) {
-        const newAuthToken = await refreshAccessToken(loggedInUser.authToken.refresh_token)
-        loggedInUser.authToken = newAuthToken;
-    }
+  const response = await get(BB2_BENEFIT_URL, req.query, `${loggedInUser.authToken?.accessToken}`);
 
-    const response = await get(BB2_BENEFIT_URL, req.query, `${loggedInUser.authToken?.access_token}`);
-
-    if (response.status === 200) {
-        return response.data;
-    }
-    else {
-        // send generic error to client
-        return JSON.parse('{"message": "Unable to load EOB Data - fetch FHIR resource error."}');
-    }
+  res.json(response.data);
 }
 
-/* 
+/*
 * DEVELOPER NOTES:
-* this function is used directly by the front-end to 
+* this function is used directly by the front-end to
 * retrieve eob data from the mocked DB
 * This would be replaced by a persistence service layer for whatever
 *  DB you would choose to use
 */
-export async function getBenefitDataEndPoint(req: Request, res: Response) {
-    const loggedInUser = getLoggedInUser(db);
-    const data = loggedInUser.eobData;
-    if ( data ) {
-        res.json(data)
-    }
+export function getBenefitDataEndPoint(req: Request, res: Response) {
+  const loggedInUser = getLoggedInUser(db);
+  const data = loggedInUser.eobData;
+  if (data) {
+    res.json(data);
+  }
 }
 
 export async function getPatientData(req: Request, res: Response) {
-    const loggedInUser = getLoggedInUser(db);
-    const envConfig = config[db.settings.env];
-    // get Patient end point
-    const response = await get(`${envConfig.bb2BaseUrl}/${db.settings.version}/fhir/Patient/`, req.query, `${loggedInUser.authToken?.access_token}`);
-    res.json(response.data);
+  const loggedInUser = getLoggedInUser(db);
+  // get Patient end point
+  const response = await get(getURL('fhir/Patient/'),
+                             req.query,
+                             `${loggedInUser.authToken?.accessToken || 'no access token'} `);
+  res.json(response.data);
 }
 
 export async function getCoverageData(req: Request, res: Response) {
-    const loggedInUser = getLoggedInUser(db);
-    const envConfig = config[db.settings.env];
-    // get Coverage end point
-    const response = await get(`${envConfig.bb2BaseUrl}/${db.settings.version}/fhir/Coverage/`, req.query, `${loggedInUser.authToken?.access_token}`);
-    res.json(response.data);
+  const loggedInUser = getLoggedInUser(db);
+  // get Coverage end point
+  const response = await get(getURL('fhir/Coverage/'),
+                             req.query,
+                             `${loggedInUser.authToken?.accessToken || 'no access token'}`);
+  res.json(response.data);
 }
 
 export async function getUserProfileData(req: Request, res: Response) {
-    const loggedInUser = getLoggedInUser(db);
-    const envConfig = config[db.settings.env];
-    // get usrinfo end point
-    const response = await get(`${envConfig.bb2BaseUrl}/${db.settings.version}/connect/userinfo`, req.query, `${loggedInUser.authToken?.access_token}`);
-    res.json(response.data);
+  const loggedInUser = getLoggedInUser(db);
+  // get usrinfo end point
+  const response = await get(getURL('connect/userinfo'),
+                             req.query,
+                             `${loggedInUser.authToken?.accessToken || 'no access token'}`);
+  res.json(response.data);
 }
 
 const router = Router();
 
 router.get('/benefit', getBenefitDataEndPoint);
+// turn off eslinting for below router get function - it's OK to call a async which return a promise
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+router.get('/benefit-direct', getBenefitData);
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.get('/patient', getPatientData);
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.get('/coverage', getCoverageData);
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.get('/userprofile', getUserProfileData);
 
 export default router;

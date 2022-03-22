@@ -2,7 +2,7 @@ import { Button } from '@cmsgov/design-system';
 import axios from 'axios';
 import chart from '../images/who-charted.png'
 import { SettingsType } from '../types/settings';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 export default function PatientData() {
     const [header] = useState('Add your Medicare Prescription Drug data');
@@ -38,4 +38,4 @@ export default function PatientData() {
             </div>
         </div>
     );
-};
+}

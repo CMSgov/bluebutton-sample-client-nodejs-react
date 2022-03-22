@@ -1,0 +1,32 @@
+name: CI for Node.js React Sample App
+on: [push]
+jobs:
+  build:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2
+        
+        - uses: actions/setup-node@v2
+          with:
+            node-version: 14
+
+        - name: Install server
+          run: yarn --cwd server install
+
+        - name: Install client
+          run: yarn --cwd client install
+
+        - name: Lint server source
+          run: yarn --cwd server lint
+
+        - name: Lint client source
+          run: yarn --cwd client lint
+
+        - name: Copy config
+          run: cp server/src/configs/sample.config.ts server/src/configs/config.ts
+
+        - name: Copy .env
+          run: cp server/src/pre-start/env/sandbox.sample.env server/src/pre-start/env/development.env
+
+        - name: Run server tests
+          run: yarn --cwd server test
