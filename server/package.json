@@ -63,6 +63,7 @@
     ],
     "dependencies": {
         "axios": "^0.21.2",
+        "cms-bluebutton": "https://github.com/CMSgov/cms-bb2-node-sdk.git#BB2-1133_use_node_sdk",
         "command-line-args": "^5.1.1",
         "cookie-parser": "^1.4.5",
         "dotenv": "^8.2.0",
