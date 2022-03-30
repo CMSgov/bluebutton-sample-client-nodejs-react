@@ -1,4 +1,9 @@
 {
+    "ts-node": {
+        "compilerOptions": {
+            "module": "commonjs"
+        }
+    },
     "compilerOptions": {
         /* Visit https://aka.ms/tsconfig.json to read more about this file */
         /* Basic Options */
@@ -74,8 +79,12 @@
             ],
             "@server": [
                 "src/Server"
-            ]
+            ],
         },
+        "typeRoots": [
+            "src/@types",
+            "node_modules/@types"
+        ]
     },
     "include": [
         "src/**/*.ts",

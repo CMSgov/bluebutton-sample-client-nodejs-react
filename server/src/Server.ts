@@ -8,9 +8,13 @@ import 'express-async-errors';
 
 import BaseRouter from './routes';
 import logger from './shared/Logger';
+import BlueButton from 'cms-bluebutton';
 
 const app = express();
 const { BAD_REQUEST } = StatusCodes;
+
+const bb = new BlueButton();
+
 
 /** **********************************************************************************
  *                              Set basic express settings
@@ -29,6 +33,11 @@ if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'sandbox'
 if (process.env.NODE_ENV === 'production') {
   app.use(helmet());
 }
+
+app.use((req, res, next) => {
+  req.bb = bb;
+  next();
+})
 
 // Add APIs
 app.use('/api', BaseRouter);

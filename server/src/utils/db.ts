@@ -1,6 +1,6 @@
-import AuthorizationToken from '../entities/AuthorizationToken';
 import Settings from '../entities/Settings';
 import { CodeChallenge } from './generatePKCE';
+import { AuthorizationToken, AuthData } from 'cms-bluebutton';
 
 /* DEVELOPER NOTES:
 * This is our mocked DB
@@ -15,6 +15,7 @@ export interface UserInfo {
 
 export interface User {
   authToken?: AuthorizationToken,
+  authData?: AuthData,
   userInfo: UserInfo,
   eobData?: any,
   errors: string[]

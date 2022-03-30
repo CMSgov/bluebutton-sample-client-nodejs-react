@@ -1,10 +1,7 @@
 import { Router, Request, Response } from 'express';
-import moment from 'moment';
 import { getLoggedInUser } from '../utils/user';
-import { refreshAccessToken } from '../utils/bb2';
 import config from '../configs/config';
 import db from '../utils/db';
-import { get } from '../utils/request';
 
 const envConfig = config[db.settings.env];
 
@@ -18,28 +15,27 @@ function getURL(path: string): string {
 * we grouped them together for use of use for the front-end
 */
 
-// this function is used to query eob data for the authenticated Medicare.gov
-// user and returned - we are then storing in a mocked DB
-export async function getBenefitData(req: Request, res: Response) {
+export async function getBenefitDataOnly(req: Request) {
   const loggedInUser = getLoggedInUser(db);
   const FHIR_EOB_PATH = 'fhir/ExplanationOfBenefit/';
   const BB2_BENEFIT_URL = getURL(FHIR_EOB_PATH);
-  
-  if (!loggedInUser.authToken || !loggedInUser.authToken.accessToken) {
+
+  if (!loggedInUser.authToken) {
     return { data: {} };
   }
 
-  /*
-  * If the access token is expired, use the refresh token to generate a new one
-  */
-  if (moment(loggedInUser.authToken.expiresAt).isBefore(moment())) {
-    const newAuthToken = await refreshAccessToken(loggedInUser.authToken.refreshToken);
-    loggedInUser.authToken = newAuthToken;
-  }
+  const response = await req.bb?.getExplanationOfBenefitData(loggedInUser.authToken);
 
-  const response = await get(BB2_BENEFIT_URL, req.query, `${loggedInUser.authToken?.accessToken}`);
+  console.log(response);
 
-  res.json(response.data);
+  return response ? response.response.data : {};
+}
+
+// this function is used to query eob data for the authenticated Medicare.gov
+// user and returned - we are then storing in a mocked DB
+export async function getBenefitData(req: Request, res: Response) {
+  const data = await getBenefitDataOnly(req);
+  res.json(data);
 }
 
 /*
@@ -60,28 +56,37 @@ export function getBenefitDataEndPoint(req: Request, res: Response) {
 export async function getPatientData(req: Request, res: Response) {
   const loggedInUser = getLoggedInUser(db);
   // get Patient end point
-  const response = await get(getURL('fhir/Patient/'),
-                             req.query,
-                             `${loggedInUser.authToken?.accessToken || 'no access token'} `);
-  res.json(response.data);
+
+  if (!loggedInUser.authToken) {
+    return res.json({});
+  }
+  
+  const response = await req.bb?.getPatientData(loggedInUser.authToken);
+  res.json(response?.response.data);
 }
 
 export async function getCoverageData(req: Request, res: Response) {
   const loggedInUser = getLoggedInUser(db);
+
   // get Coverage end point
-  const response = await get(getURL('fhir/Coverage/'),
-                             req.query,
-                             `${loggedInUser.authToken?.accessToken || 'no access token'}`);
-  res.json(response.data);
+  if (!loggedInUser.authToken) {
+    return res.json({});
+  }
+
+  const response = await req.bb?.getCoverageData(loggedInUser.authToken);
+  res.json(response?.response.data);
 }
 
 export async function getUserProfileData(req: Request, res: Response) {
   const loggedInUser = getLoggedInUser(db);
+
   // get usrinfo end point
-  const response = await get(getURL('connect/userinfo'),
-                             req.query,
-                             `${loggedInUser.authToken?.accessToken || 'no access token'}`);
-  res.json(response.data);
+  if (!loggedInUser.authToken) {
+    return res.json({});
+  }
+
+  const response = await req.bb?.getProfileData(loggedInUser.authToken);
+  res.json(response?.response.data);
 }
 
 const router = Router();

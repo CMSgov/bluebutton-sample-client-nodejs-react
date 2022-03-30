@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "cms-bb2": "https://github.com/CMSgov/cms-bb2-node-sdk",
+    "cms-bluebutton": "https://github.com/CMSgov/cms-bb2-node-sdk.git#BB2-1133_use_node_sdk"
+  }
+}

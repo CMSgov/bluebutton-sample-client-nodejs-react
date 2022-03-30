@@ -1,9 +1,10 @@
-import { IUser } from "@entities/User";
+import BlueButton from "cms-bluebutton"
+import express from "express";
 
-declare module 'express' {
-    export interface Request  {
-        body: {
-            user: IUser
-        };
+declare global {
+  namespace Express {
+    interface Request {
+      bb?: BlueButton
     }
+  }
 }
