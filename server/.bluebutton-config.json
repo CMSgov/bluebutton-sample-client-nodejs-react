@@ -1,5 +1,0 @@
-{
-  "clientId": "9d6CVFOXOHMFyXQXpjK56XiN1HXMOuwW92IVX2oe",
-  "clientSecret": "RWksNnmHB4ulbvvhpRiYrlTSPrxChfXxC6Ey1L44YzRhIHZ1FPIO5GqLl0pJ7YIOq0LKh6FeuImnBAgh6KLF2xGlXBR8LnlYmTzAHnH2YfvvE7r5E8H0DeWJPoFuzSyz",
-  "callbackUrl": "http://localhost:3001/api/bluebutton/callback/"
-}

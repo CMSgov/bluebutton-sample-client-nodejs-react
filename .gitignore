@@ -29,3 +29,4 @@ production.env
 sandbox.env
 
 config.ts
+server/.bluebutton-config.json
