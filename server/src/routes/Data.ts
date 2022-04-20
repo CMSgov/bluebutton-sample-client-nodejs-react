@@ -40,7 +40,7 @@ export async function getBenefitData(req: Request, res: Response) {
 
   const response = await get(BB2_BENEFIT_URL, req.query, `${loggedInUser.authToken?.accessToken}`);
 
-  return response.data;
+  return response.data as Record<string, unknown>;
 }
 
 /*
