@@ -28,7 +28,7 @@ export async function getBenefitDataOnly(req: Request) {
 
   console.log(response);
 
-  return response ? response.response.data : {};
+  return response ? response?.response?.data : {};
 }
 
 // this function is used to query eob data for the authenticated Medicare.gov
@@ -62,7 +62,8 @@ export async function getPatientData(req: Request, res: Response) {
   }
   
   const response = await req.bb?.getPatientData(loggedInUser.authToken);
-  res.json(response?.response.data);
+  // res.json(response?.response.data);
+  res.json(response?.response?.data);
 }
 
 export async function getCoverageData(req: Request, res: Response) {
@@ -74,7 +75,7 @@ export async function getCoverageData(req: Request, res: Response) {
   }
 
   const response = await req.bb?.getCoverageData(loggedInUser.authToken);
-  res.json(response?.response.data);
+  res.json(response?.response?.data);
 }
 
 export async function getUserProfileData(req: Request, res: Response) {
@@ -86,7 +87,7 @@ export async function getUserProfileData(req: Request, res: Response) {
   }
 
   const response = await req.bb?.getProfileData(loggedInUser.authToken);
-  res.json(response?.response.data);
+  res.json(response?.response?.data);
 }
 
 const router = Router();

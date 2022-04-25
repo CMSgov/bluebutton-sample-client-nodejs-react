@@ -10,7 +10,11 @@ COPY ["./src/pre-start/env/sandbox.sample.env","./src/pre-start/env/development.
 
 COPY . . 
 
-RUN yarn install
+RUN yarn cache clean
+
+# Fix issue with direct install from Github with concurrency option. TODO: Remove later!
+#RUN yarn install --network-concurrency 1 --verbose
+RUN yarn install --network-concurrency 1
 
 EXPOSE 3001
 

@@ -10,10 +10,42 @@ import BaseRouter from './routes';
 import logger from './shared/Logger';
 import BlueButton from 'cms-bluebutton';
 
+import db from './utils/db';
+import config from './configs/config';
+
+
 const app = express();
 const { BAD_REQUEST } = StatusCodes;
 
-const bb = new BlueButton();
+console.log("--------Server--------------")
+console.log("DB Settings: ", db.settings)
+console.log("-------------")
+console.log("-------------")
+console.log("-------------")
+
+const envConfig = config[db.settings.env];
+console.log("-------------")
+console.log("---------app config:  " + JSON.stringify(envConfig))
+console.log("-------------")
+
+const versionNum = db.settings.version.slice(-1);
+
+console.log("-------------");
+console.log("------------VERSION NUM: ", versionNum);
+console.log("-------------");
+
+const blueButtonConfig = {
+    baseUrl: envConfig.bb2BaseUrl,
+    clientId: envConfig.bb2ClientId,
+    clientSecret: envConfig.bb2ClientSecret,
+    callbackUrl: envConfig.bb2CallbackUrl,
+    version: versionNum
+};
+console.log("-------------")
+console.log("---------blueButtonConifg: " + JSON.stringify(blueButtonConfig))
+console.log("-------------")
+
+const bb = new BlueButton(blueButtonConfig);
 
 
 /** **********************************************************************************
