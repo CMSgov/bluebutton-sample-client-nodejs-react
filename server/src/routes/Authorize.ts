@@ -58,7 +58,7 @@ export async function authorizationCallback(req: Request, res: Response) {
        * You could also request data for the Patient endpoint and/or the Coverage endpoint here
        * using similar functionality
        */
-      const eobData = await getBenefitData(req);
+      const eobData = await getBenefitData(req, res);
       loggedInUser.eobData = eobData;
     } else {
       // send generic error message to FE

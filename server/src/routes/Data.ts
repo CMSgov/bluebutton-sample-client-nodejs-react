@@ -24,6 +24,7 @@ export async function getBenefitData(req: Request, res: Response) {
   const loggedInUser = getLoggedInUser(db);
   const FHIR_EOB_PATH = 'fhir/ExplanationOfBenefit/';
   const BB2_BENEFIT_URL = getURL(FHIR_EOB_PATH);
+
   
   if (!loggedInUser.authToken || !loggedInUser.authToken.accessToken) {
     return { data: {} };
@@ -39,7 +40,7 @@ export async function getBenefitData(req: Request, res: Response) {
 
   const response = await get(BB2_BENEFIT_URL, req.query, `${loggedInUser.authToken?.accessToken}`);
 
-  res.json(response.data);
+  return response.data as Record<string, unknown>;
 }
 
 /*

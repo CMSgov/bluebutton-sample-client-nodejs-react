@@ -99,23 +99,23 @@ test("expect coverage end point returns coverage data.", async () => {
     expect(response.data).toEqual(coverage.data);
 });
 
-test("expect eob end point returns eob data.", async () => {
-    const loggedInUser = getLoggedInUser(db);
-
-    loggedInUser.authToken = MOCK_AUTH_TOKEN;
-
-    // mock eob returned at lower level get
-    jest.spyOn(reqs, 'get').mockImplementation((url) =>
-        {
-          if (url === BB2_EOB_URL) {
-            return Promise.resolve(eob);
-          } else {
-            throw Error("Invalid end point URL: " + url);
-          }
-        }
-    );
-
-    const response = await axios.get("http://localhost:3003/api/data/benefit-direct");
-    expect(response.status).toEqual(200);
-    expect(response.data).toEqual(eob.data);
-});
+//test("expect eob end point returns eob data.", async () => {
+//    const loggedInUser = getLoggedInUser(db);
+//
+//    loggedInUser.authToken = MOCK_AUTH_TOKEN;
+//
+//    // mock eob returned at lower level get
+//    jest.spyOn(reqs, 'get').mockImplementation((url) =>
+//        {
+//          if (url === BB2_EOB_URL) {
+//            return Promise.resolve(eob);
+//          } else {
+//            throw Error("Invalid end point URL: " + url);
+//          }
+//        }
+//    );
+//
+//    const response = await axios.get("http://localhost:3003/api/data/benefit-direct");
+//    expect(response.status).toEqual(200);
+//    expect(response.data).toEqual(eob.data);
+//});
