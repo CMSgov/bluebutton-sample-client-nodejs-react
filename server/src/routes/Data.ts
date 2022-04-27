@@ -20,6 +20,7 @@ export async function getBenefitDataOnly(req: Request) {
   const FHIR_EOB_PATH = 'fhir/ExplanationOfBenefit/';
   const BB2_BENEFIT_URL = getURL(FHIR_EOB_PATH);
 
+//  if (!loggedInUser.authToken || !loggedInUser.authToken.accessToken) {
   if (!loggedInUser.authToken) {
     return { data: {} };
   }
