@@ -63,7 +63,7 @@
     ],
     "dependencies": {
         "axios": "^0.21.2",
-        "cms-bluebutton": "file:cms-bluebutton-sdk-v0.1.0.tgz",
+        "cms-bluebutton-sdk": "file:cms-bluebutton-sdk-v0.1.0.tgz",
         "command-line-args": "^5.1.1",
         "cookie-parser": "^1.4.5",
         "dotenv": "^8.2.0",

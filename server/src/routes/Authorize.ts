@@ -6,7 +6,8 @@ import db from '../utils/db';
 import { getAccessToken, generateAuthorizeUrl } from '../utils/bb2';
 import { getBenefitData, getBenefitDataOnly } from './Data';
 
-const BENE_DENIED_ACCESS = 'access_denied';
+import { Errors } from 'cms-bluebutton-sdk';
+
 
 export async function authorizationCallback(req: Request, res: Response) {
   try {
@@ -16,18 +17,19 @@ export async function authorizationCallback(req: Request, res: Response) {
         In a real application you'll most likely want to tie your user to the request using the state from the auth data
         you can get the state from the req.query.state
     */
-
     const loggedInUser = getLoggedInUser(db);
 
     if (!loggedInUser.authData) {
       throw new Error('Missing auth data');
     }
 
-    console.log(loggedInUser);
-    console.log(req.query);
+    const authToken = await req.bb?.getAuthorizationToken(
+      loggedInUser.authData,
+      req.query.code?.toString(),
+      req.query.state?.toString(),
+      req.query.error?.toString()
+    );
 
-    const authToken = await req.bb?.getAuthorizationToken(loggedInUser.authData, req.query.code?.toString(), req.query.state?.toString(), req.query.error?.toString());
-    console.log(authToken)
     /* DEVELOPER NOTES:
        * This is where you would most likely place some type of
        * persistence service/functionality to store the token along with
@@ -48,22 +50,38 @@ export async function authorizationCallback(req: Request, res: Response) {
        * You could also request data for the Patient endpoint and/or the Coverage endpoint here
        * using similar functionality
        */
+
     const eobData = await getBenefitDataOnly(req);
     loggedInUser.eobData = eobData;
-//      const eobData = await getBenefitData(req, res);
-//      loggedInUser.eobData = eobData;
-//    } else {
-//      // send generic error message to FE
-//      const general_err = '{"message": "Unable to load EOB Data - authorization failed."}';
-//      loggedInUser.eobData = JSON.parse(general_err);
-//    }
-  } catch (e) {
+
+  } catch (e: unknown) {
     /* DEVELOPER NOTES:
      * This is where you could also use a data service or other exception handling
      * to display or store the error
+     * 
+     * The following are possible error enums for the BB2 SDK:
+     * 
+     *  CALLBACK_ACCESS_DENIED = "Callback request beneficiary denied access to their data",
+     *  CALLBACK_ACCESS_CODE_MISSING = "Callback request is missing the CODE query parameter",
+     *  CALLBACK_STATE_MISSING = "Callback request is missing the STATE query parameter",
+     *  CALLBACK_STATE_DOES_NOT_MATCH = "Provided callback state does not match AuthData state",
+     *  AUTH_TOKEN_URL_RESPONSE_DATA_MISSING = "Token endpoint response data is missing",
+     * 
+     * The handling of CALLBACK_ACCESS_DENIED is demonstrated below.
+     *    This occurs when a beneficiary selects "DENY" on the consent page,
      */
-    console.log(e)
+
     logger.err(e);
+
+    const loggedInUser = getLoggedInUser(db);
+
+    if (typeof e === "object") {
+      if (e?.toString() === "Error: " + Errors.CALLBACK_ACCESS_DENIED ) {
+        // send generic error message to FE
+        const general_err = '{"message": "Beneficiary denied access to their data"}';
+        loggedInUser.eobData = JSON.parse(general_err);
+      }
+    }
   }
   /* DEVELOPER NOTE:
    * This is a hardcoded redirect, but this should be used from settings stored in a conf file

@@ -1,6 +1,6 @@
 import Settings from '../entities/Settings';
 import { CodeChallenge } from './generatePKCE';
-import { AuthorizationToken, AuthData } from 'cms-bluebutton';
+import { AuthorizationToken, AuthData } from 'cms-bluebutton-sdk';
 
 /* DEVELOPER NOTES:
 * This is our mocked DB

@@ -8,7 +8,10 @@ import 'express-async-errors';
 
 import BaseRouter from './routes';
 import logger from './shared/Logger';
-import BlueButton from 'cms-bluebutton';
+
+// Import the Blue Button 2.0 SDK
+import BlueButton from 'cms-bluebutton-sdk';
+import { Environments } from 'cms-bluebutton-sdk';
 
 import db from './utils/db';
 import config from './configs/config';
@@ -17,33 +20,25 @@ import config from './configs/config';
 const app = express();
 const { BAD_REQUEST } = StatusCodes;
 
-console.log("--------Server--------------")
-console.log("DB Settings: ", db.settings)
-console.log("-------------")
-console.log("-------------")
-console.log("-------------")
-
+// Setup configuration for BB2 SDK
 const envConfig = config[db.settings.env];
-console.log("-------------")
-console.log("---------app config:  " + JSON.stringify(envConfig))
-console.log("-------------")
-
 const versionNum = db.settings.version.slice(-1);
+let sdkEnviornmentEnum;
 
-console.log("-------------");
-console.log("------------VERSION NUM: ", versionNum);
-console.log("-------------");
+if (db.settings.env === 'production') {
+  sdkEnviornmentEnum = Environments.PRODUCTION;
+}
+else {
+  sdkEnviornmentEnum = Environments.SANDBOX;
+}
 
 const blueButtonConfig = {
-    baseUrl: envConfig.bb2BaseUrl,
     clientId: envConfig.bb2ClientId,
     clientSecret: envConfig.bb2ClientSecret,
     callbackUrl: envConfig.bb2CallbackUrl,
-    version: versionNum
+    version: versionNum,
+    environment: sdkEnviornmentEnum
 };
-console.log("-------------")
-console.log("---------blueButtonConifg: " + JSON.stringify(blueButtonConfig))
-console.log("-------------")
 
 const bb = new BlueButton(blueButtonConfig);
 
