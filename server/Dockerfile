@@ -10,6 +10,8 @@ COPY ["./src/pre-start/env/sandbox.sample.env","./src/pre-start/env/development.
 
 COPY . . 
 
+RUN yarn cache clean
+
 RUN yarn install
 
 EXPOSE 3001

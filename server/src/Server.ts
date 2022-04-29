@@ -9,8 +9,39 @@ import 'express-async-errors';
 import BaseRouter from './routes';
 import logger from './shared/Logger';
 
+// Import the Blue Button 2.0 SDK
+import BlueButton from 'cms-bluebutton-sdk';
+import { Environments } from 'cms-bluebutton-sdk';
+
+import db from './utils/db';
+import config from './configs/config';
+
+
 const app = express();
 const { BAD_REQUEST } = StatusCodes;
+
+// Setup configuration for BB2 SDK
+const envConfig = config[db.settings.env];
+const versionNum = db.settings.version.slice(-1);
+let sdkEnviornmentEnum;
+
+if (db.settings.env === 'production') {
+  sdkEnviornmentEnum = Environments.PRODUCTION;
+}
+else {
+  sdkEnviornmentEnum = Environments.SANDBOX;
+}
+
+const blueButtonConfig = {
+    clientId: envConfig.bb2ClientId,
+    clientSecret: envConfig.bb2ClientSecret,
+    callbackUrl: envConfig.bb2CallbackUrl,
+    version: versionNum,
+    environment: sdkEnviornmentEnum
+};
+
+const bb = new BlueButton(blueButtonConfig);
+
 
 /** **********************************************************************************
  *                              Set basic express settings
@@ -29,6 +60,11 @@ if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'sandbox'
 if (process.env.NODE_ENV === 'production') {
   app.use(helmet());
 }
+
+app.use((req, res, next) => {
+  req.bb = bb;
+  next();
+})
 
 // Add APIs
 app.use('/api', BaseRouter);
