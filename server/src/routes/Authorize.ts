@@ -1,13 +1,12 @@
 import { Router, Request, Response } from 'express';
 import { clearBB2Data, getLoggedInUser } from '../utils/user';
 import logger from '../shared/Logger';
-import Settings from '../entities/Settings';
 import db from '../utils/db';
-import { getAccessToken, generateAuthorizeUrl } from '../utils/bb2';
-import { getBenefitData, getBenefitDataOnly } from './Data';
+import { getBenefitData } from './Data';
 
 import { Errors } from 'cms-bluebutton-sdk';
 
+const BENE_DENIED_ACCESS = 'access_denied';
 
 export async function authorizationCallback(req: Request, res: Response) {
   try {
@@ -51,7 +50,7 @@ export async function authorizationCallback(req: Request, res: Response) {
        * using similar functionality
        */
 
-    const eobData = await getBenefitDataOnly(req);
+    const eobData = await getBenefitData(req);
     loggedInUser.eobData = eobData;
 
   } catch (e: unknown) {
@@ -77,7 +76,11 @@ export async function authorizationCallback(req: Request, res: Response) {
 
     if (typeof e === "object") {
       if (e?.toString() === "Error: " + Errors.CALLBACK_ACCESS_DENIED ) {
-        // send generic error message to FE
+        // clear all saved claims data since the bene has denied access for the application
+        clearBB2Data(loggedInUser);
+        loggedInUser.errors.push(BENE_DENIED_ACCESS);
+
+        // send error message to FE
         const general_err = '{"message": "Beneficiary denied access to their data"}';
         loggedInUser.eobData = JSON.parse(general_err);
       }

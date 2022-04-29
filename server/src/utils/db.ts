@@ -1,5 +1,4 @@
 import Settings from '../entities/Settings';
-import { CodeChallenge } from './generatePKCE';
 import { AuthorizationToken, AuthData } from 'cms-bluebutton-sdk';
 
 /* DEVELOPER NOTES:
@@ -23,10 +22,6 @@ export interface User {
 export interface DB {
   patients: any,
   users: User[],
-  codeChallenges: {
-    [key: string]: CodeChallenge
-  },
-  codeChallenge: CodeChallenge,
   settings: Settings
 }
 
@@ -56,11 +51,6 @@ const db: DB = {
     },
     errors: [],
   }],
-  codeChallenges: {},
-  codeChallenge: {
-    codeChallenge: '',
-    verifier: '',
-  },
   settings: new Settings(undefined),
 };
 
