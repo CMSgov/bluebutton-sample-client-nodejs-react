@@ -10,7 +10,7 @@ import BaseRouter from './routes';
 import logger from './shared/Logger';
 
 // Import the Blue Button 2.0 SDK
-import BlueButton from 'cms-bluebutton-sdk';
+import { BlueButton } from 'cms-bluebutton-sdk';
 import { Environments } from 'cms-bluebutton-sdk';
 
 import db from './utils/db';

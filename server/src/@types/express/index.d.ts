@@ -1,5 +1,5 @@
-import BlueButton from "cms-bluebutton-sdk";
-import Environments from 'cms-bluebutton-sdk';
+import { BlueButton } from "cms-bluebutton-sdk";
+import { Environments } from 'cms-bluebutton-sdk';
 
 import express from "express";
 
