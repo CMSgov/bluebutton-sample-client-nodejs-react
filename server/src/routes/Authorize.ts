@@ -22,6 +22,7 @@ export async function authorizationCallback(req: Request, res: Response) {
       throw new Error('Missing auth data');
     }
 
+    //SDK call
     const authToken = await req.bb?.getAuthorizationToken(
       loggedInUser.authData,
       req.query.code?.toString(),

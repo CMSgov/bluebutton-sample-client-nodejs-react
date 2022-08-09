@@ -15,6 +15,7 @@ export async function getBenefitData(req: Request) {
     return { data: {} };
   }
 
+  //SDK call
   const response = await req.bb?.getExplanationOfBenefitData(loggedInUser.authToken);
 
   return response ? response?.response?.data : {};
@@ -49,7 +50,8 @@ export async function getPatientData(req: Request, res: Response) {
   if (!loggedInUser.authToken) {
     return res.json({});
   }
-  
+
+  //SDK call
   const response = await req.bb?.getPatientData(loggedInUser.authToken);
   // res.json(response?.response.data);
   res.json(response?.response?.data);
@@ -63,6 +65,7 @@ export async function getCoverageData(req: Request, res: Response) {
     return res.json({});
   }
 
+  //SDK call
   const response = await req.bb?.getCoverageData(loggedInUser.authToken);
   res.json(response?.response?.data);
 }
@@ -75,6 +78,7 @@ export async function getUserProfileData(req: Request, res: Response) {
     return res.json({});
   }
 
+  //SDK call
   const response = await req.bb?.getProfileData(loggedInUser.authToken);
   res.json(response?.response?.data);
 }
