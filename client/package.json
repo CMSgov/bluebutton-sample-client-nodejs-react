@@ -19,8 +19,8 @@
     "web-vitals": "^3.0.3"
   },
   "scripts": {
-    "start": "DANGEROUSLY_DISABLE_HOST_CHECK=true REACT_APP_CTX=docker react-scripts start",
-    "start-native": "NODE_OPTIONS=--openssl-legacy-provider REACT_APP_CTX=native react-scripts start",
+    "start": "REACT_APP_CTX=docker react-scripts start",
+    "start-native": "REACT_APP_CTX=native react-scripts start",
     "lint": "eslint --ext .ts --ext .js --ext .tsx .",
     "build": "react-scripts build",
     "test": "react-scripts test",

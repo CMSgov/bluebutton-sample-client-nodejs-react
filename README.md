@@ -92,9 +92,13 @@ Configure the remote target BB2 instance where the tested app is registered (as 
 
 Go to local repo base directory, from there run:
 
-docker-compose --profile tests up --abort-on-container-exit
+docker-compose -f docker-compose.selenium.yml up --abort-on-container-exit
 
 Note: --abort-on-container-exit will abort client and server containers when selenium tests ends
+
+## Visual trouble shoot
+
+Install VNC viewer and point browser to http://localhost:5900 to monitor web UI interactions
 
 ## Error Responses and handling:
 

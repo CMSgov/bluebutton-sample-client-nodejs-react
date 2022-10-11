@@ -5,7 +5,7 @@
         "build": "./node_modules/.bin/ts-node build.ts",
         "lint": "eslint --fix --ext .ts --ext .tsx .",
         "start": "node -r module-alias/register ./dist --env=production",
-        "start:debug": "DANGEROUSLY_DISABLE_HOST_CHECK=true node --inspect=0.0.0.0:9229 ./node_modules/.bin/ts-node -r tsconfig-paths/register ./src",
+        "start:debug": "node --inspect=0.0.0.0:9229 ./node_modules/.bin/ts-node -r tsconfig-paths/register ./src",
         "start:dev": "nodemon",
         "test": "jest --coverage"
     },
