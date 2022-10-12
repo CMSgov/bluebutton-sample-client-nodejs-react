@@ -5,7 +5,7 @@ import AuthorizationToken from '../entities/AuthorizationToken';
 import Settings from '../entities/Settings';
 import db from '../utils/db';
 import { getAccessToken, generateAuthorizeUrl } from '../utils/bb2';
-import { getBenefitData } from './Data';
+import { getBenefitReturnData } from './Data';
 
 const BENE_DENIED_ACCESS = 'access_denied';
 
@@ -58,7 +58,7 @@ export async function authorizationCallback(req: Request, res: Response) {
        * You could also request data for the Patient endpoint and/or the Coverage endpoint here
        * using similar functionality
        */
-      const eobData = await getBenefitData(req, res);
+      const eobData = await getBenefitReturnData(req, res);
       loggedInUser.eobData = eobData;
     } else {
       // send generic error message to FE

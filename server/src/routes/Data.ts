@@ -18,15 +18,21 @@ function getURL(path: string): string {
 
 // this function is used to query eob data for the authenticated Medicare.gov
 // user and returned - we are then storing in a mocked DB
-export async function getBenefitData(req: Request, res: Response) {
+export async function getBenefitReturnData(req: Request, res: Response) {
   const loggedInUser = getLoggedInUser(db);
   // get EOB end point
   const response = await get(getURL('fhir/ExplanationOfBenefit/'),
                              req.query,
                              `${loggedInUser.authToken?.accessToken || 'no access token'}`);
-  res.json(response.data);
+  return response.data as Record<string, unknown>;
 }
 
+// for bene-direct call
+export async function getBenefitData(req: Request, res: Response) {
+    const eob_data = await getBenefitReturnData(req, res);
+    res.json(eob_data);
+}
+  
 /*
 * DEVELOPER NOTES:
 * this function is used directly by the front-end to
