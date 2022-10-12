@@ -38,27 +38,40 @@ class TestNodeSampleApp():
     def teardown_method(self, method):
         self.driver.quit()
 
+    def _find_elem_xpath(self, xpath_expr, **kwargs):
+        elems = self.driver.find_elements(By.XPATH, xpath_expr)
+        assert elems is not None
+        return elems
+
     def _find_and_click(self, timeout_sec, by, by_expr, **kwargs):
-        elem = WebDriverWait(self.driver, timeout_sec).until(EC.visibility_of_element_located((by, by_expr)))
+        elem = WebDriverWait(self.driver, timeout_sec).until(
+            EC.visibility_of_element_located((by, by_expr)))
         assert elem is not None
         elem.click()
         return elem
 
+    def _find_and_return(self, timeout_sec, by, by_expr, **kwargs):
+        elem = WebDriverWait(self.driver, timeout_sec).until(
+            EC.visibility_of_element_located((by, by_expr)))
+        assert elem is not None
+        return elem
+
     def _find_and_sendkey(self, timeout_sec, by, by_expr, txt, **kwargs):
-        elem = WebDriverWait(self.driver, timeout_sec).until(EC.visibility_of_element_located((by, by_expr)))
+        elem = WebDriverWait(self.driver, timeout_sec).until(
+            EC.visibility_of_element_located((by, by_expr)))
         assert elem is not None
         elem.send_keys(txt)
         return elem
 
-    def _assert_EOB_table_header_present(self):        
-        self._find_and_click(30, By.ID, "column_1")
-        self._find_and_click(30, By.ID, "column_2")
-        self._find_and_click(30, By.ID, "column_3")
+    def _assert_EOB_table_header_present(self):       
+        self._find_and_return(30, By.ID, "column_1")
+        self._find_and_return(30, By.ID, "column_2")
+        self._find_and_return(30, By.ID, "column_3")
 
-    def _assert_EOB_table_records_present(self):        
-        self._find_and_click(30, By.ID, "column_1")
-        self._find_and_click(30, By.ID, "column_2")
-        self._find_and_click(30, By.ID, "column_3")
+    def _assert_EOB_table_records_present(self, cnt):
+        xpath = "//table/tbody/tr/td[@data-title='NDC Code']"
+        elements = self._find_elem_xpath(xpath)
+        assert len(elements) == cnt
 
     def _input_user_and_passwd_and_login(self):
         self._find_and_sendkey(30, By.ID, "username-textbox", "BBUser10000")
@@ -73,6 +86,7 @@ class TestNodeSampleApp():
         self._input_user_and_passwd_and_login()
         self._find_and_click(30, By.ID, "approve")
         self._assert_EOB_table_header_present()
+        self._assert_EOB_table_records_present(10)
 
     def test_node_sample_app_grant_access_no_demographic(self):
         self.driver.get("http://client:3000/")
@@ -84,6 +98,7 @@ class TestNodeSampleApp():
         self._find_and_click(30, By.CSS_SELECTOR, "label:nth-child(5)")
         self._find_and_click(30, By.ID, "approve")
         self._assert_EOB_table_header_present()
+        self._assert_EOB_table_records_present(10)
 
     def test_node_sample_app_deny_access(self):
         self.driver.get("http://client:3000/")
@@ -93,3 +108,4 @@ class TestNodeSampleApp():
         self._input_user_and_passwd_and_login()
         self._find_and_click(30, By.ID, "deny")
         self._assert_EOB_table_header_present()
+        self._assert_EOB_table_records_present(0)
