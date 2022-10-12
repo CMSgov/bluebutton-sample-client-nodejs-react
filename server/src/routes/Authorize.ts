@@ -76,7 +76,8 @@ export async function authorizationCallback(req: Request, res: Response) {
    * This is a hardcoded redirect, but this should be used from settings stored in a conf file
    * or other mechanism
    */
-  const fe_redirect_url = process.env.SELENIUM_TESTS ? 'http://client:3000' : 'http://localhost:3000';
+  const fe_redirect_url = 
+  process.env.SELENIUM_TESTS ? 'http://client:3000' : 'http://localhost:3000';
   res.redirect(fe_redirect_url);
 }
 

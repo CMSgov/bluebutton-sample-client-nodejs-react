@@ -1,9 +1,6 @@
 import axios from "axios";
-import { getLoggedInUser } from '../utils/user';
-import db from '../utils/db';
 import app from '../Server';
 import * as reqs from '../utils/request';
-import AuthorizationToken from "../entities/AuthorizationToken";
 
 const BB2_BASE_URL = "https://sandbox.bluebutton.cms.gov";
 
@@ -23,20 +20,6 @@ const patient = { status: 200, data: { resource: "Patient" } };
 
 const profile = { status: 200, data: { resource: "Profile" } };
 
-const MOCK_AUTH_TOKEN_RESPONSE = {
-    status: 200,
-    data: {
-        access_token: "access_token_foo_refreshed",
-        expires_in: 36000,
-        token_type: "Bearer",
-        scope: ["scope1", "scope2", "scope3"],
-        refresh_token: "refresh_token_bar_refreshed",
-        patient: "-19990000000001",
-      },
-  };
-  
-const MOCK_AUTH_TOKEN = new AuthorizationToken(MOCK_AUTH_TOKEN_RESPONSE.data);
-
 let server: any;
 
 beforeAll(() => {
@@ -48,11 +31,12 @@ afterAll(() => {
 });
   
 test("expect patient end point returns patient data.", async () => {
+  jest.clearAllMocks();
   // mock patient returned at deeper layer
   jest.spyOn(reqs, 'get').mockImplementation((url) =>
     {
         if (url === BB2_PATIENT_URL) {
-          return Promise.resolve(patient);
+            return Promise.resolve(patient);
         } else {
             throw Error("Invalid end point URL: " + url);
         }
@@ -66,6 +50,7 @@ test("expect patient end point returns patient data.", async () => {
 });
 
 test("expect profile end point returns profile data.", async () => {
+  jest.clearAllMocks();
   // mock profile returned at lower level get
   jest.spyOn(reqs, 'get').mockImplementation((url) =>
     {
@@ -82,11 +67,12 @@ test("expect profile end point returns profile data.", async () => {
 });
 
 test("expect coverage end point returns coverage data.", async () => {
+    jest.clearAllMocks();
     // mock coverage returned at deeper layer
     jest.spyOn(reqs, 'get').mockImplementation((url) =>
         {
             if (url === BB2_COVERAGE_URL) {
-            return Promise.resolve(coverage);
+                return Promise.resolve(coverage);
             } else {
                 throw Error("Invalid end point URL: " + url);
             }
@@ -99,23 +85,20 @@ test("expect coverage end point returns coverage data.", async () => {
     expect(response.data).toEqual(coverage.data);
 });
 
-//test("expect eob end point returns eob data.", async () => {
-//    const loggedInUser = getLoggedInUser(db);
-//
-//    loggedInUser.authToken = MOCK_AUTH_TOKEN;
-//
-//    // mock eob returned at lower level get
-//    jest.spyOn(reqs, 'get').mockImplementation((url) =>
-//        {
-//          if (url === BB2_EOB_URL) {
-//            return Promise.resolve(eob);
-//          } else {
-//            throw Error("Invalid end point URL: " + url);
-//          }
-//        }
-//    );
-//
-//    const response = await axios.get("http://localhost:3003/api/data/benefit-direct");
-//    expect(response.status).toEqual(200);
-//    expect(response.data).toEqual(eob.data);
-//});
+test("expect eob end point returns eob data.", async () => {
+  jest.clearAllMocks();
+  // mock eob returned at lower level get
+  jest.spyOn(reqs, 'get').mockImplementation((url) =>
+       {
+         if (url === BB2_EOB_URL) {
+           return Promise.resolve(eob);
+         } else {
+            throw Error("Invalid end point URL: " + url);
+         }
+       }
+   );
+
+   const response = await axios.get("http://localhost:3003/api/data/benefit-direct");
+   expect(response.status).toEqual(200);
+   expect(response.data).toEqual(eob.data);
+});
