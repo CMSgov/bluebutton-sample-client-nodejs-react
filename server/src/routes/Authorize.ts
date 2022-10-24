@@ -5,7 +5,7 @@ import AuthorizationToken from '../entities/AuthorizationToken';
 import Settings from '../entities/Settings';
 import db from '../utils/db';
 import { getAccessToken, generateAuthorizeUrl } from '../utils/bb2';
-import { getBenefitData } from './Data';
+import { getBenefitReturnData } from './Data';
 
 const BENE_DENIED_ACCESS = 'access_denied';
 
@@ -58,7 +58,7 @@ export async function authorizationCallback(req: Request, res: Response) {
        * You could also request data for the Patient endpoint and/or the Coverage endpoint here
        * using similar functionality
        */
-      const eobData = await getBenefitData(req, res);
+      const eobData = await getBenefitReturnData(req, res);
       loggedInUser.eobData = eobData;
     } else {
       // send generic error message to FE
@@ -76,7 +76,9 @@ export async function authorizationCallback(req: Request, res: Response) {
    * This is a hardcoded redirect, but this should be used from settings stored in a conf file
    * or other mechanism
    */
-  res.redirect('http://localhost:3000');
+  const fe_redirect_url = 
+  process.env.SELENIUM_TESTS ? 'http://client:3000' : 'http://localhost:3000';
+  res.redirect(fe_redirect_url);
 }
 
 export function getAuthUrl(req: Request, res: Response) {

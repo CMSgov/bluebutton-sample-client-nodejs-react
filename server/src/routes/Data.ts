@@ -1,7 +1,5 @@
 import { Router, Request, Response } from 'express';
-import moment from 'moment';
 import { getLoggedInUser } from '../utils/user';
-import { refreshAccessToken } from '../utils/bb2';
 import config from '../configs/config';
 import db from '../utils/db';
 import { get } from '../utils/request';
@@ -20,29 +18,21 @@ function getURL(path: string): string {
 
 // this function is used to query eob data for the authenticated Medicare.gov
 // user and returned - we are then storing in a mocked DB
-export async function getBenefitData(req: Request, res: Response) {
+export async function getBenefitReturnData(req: Request, res: Response) {
   const loggedInUser = getLoggedInUser(db);
-  const FHIR_EOB_PATH = 'fhir/ExplanationOfBenefit/';
-  const BB2_BENEFIT_URL = getURL(FHIR_EOB_PATH);
-
-  
-  if (!loggedInUser.authToken || !loggedInUser.authToken.accessToken) {
-    return { data: {} };
-  }
-
-  /*
-  * If the access token is expired, use the refresh token to generate a new one
-  */
-  if (moment(loggedInUser.authToken.expiresAt).isBefore(moment())) {
-    const newAuthToken = await refreshAccessToken(loggedInUser.authToken.refreshToken);
-    loggedInUser.authToken = newAuthToken;
-  }
-
-  const response = await get(BB2_BENEFIT_URL, req.query, `${loggedInUser.authToken?.accessToken}`);
-
+  // get EOB end point
+  const response = await get(getURL('fhir/ExplanationOfBenefit/'),
+                             req.query,
+                             `${loggedInUser.authToken?.accessToken || 'no access token'}`);
   return response.data as Record<string, unknown>;
 }
 
+// for bene-direct call
+export async function getBenefitData(req: Request, res: Response) {
+    const eob_data = await getBenefitReturnData(req, res);
+    res.json(eob_data);
+}
+  
 /*
 * DEVELOPER NOTES:
 * this function is used directly by the front-end to

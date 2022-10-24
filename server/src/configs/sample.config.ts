@@ -4,6 +4,9 @@
 * Replace your client/secret/callback url for each environment below with your specific app details
 * (Note: local is mainly for BB2 internal developers)
 */
+
+const SELENIUM_TESTS = process.env.SELENIUM_TESTS;
+
 export type ConfigType = {
   [env: string]: {
     bb2BaseUrl: string,
@@ -24,7 +27,9 @@ const config: ConfigType = {
     bb2BaseUrl: 'https://sandbox.bluebutton.cms.gov',
     bb2ClientId: '<client-id>',
     bb2ClientSecret: '<client-secret>',
-    bb2CallbackUrl: 'http://localhost:3001/api/bluebutton/callback/',
+    bb2CallbackUrl: SELENIUM_TESTS ?
+    'http://server:3001/api/bluebutton/callback/' 
+    : 'http://localhost:3001/api/bluebutton/callback/',
   },
   local: {
     bb2BaseUrl: 'https://sandbox.bluebutton.cms.gov',

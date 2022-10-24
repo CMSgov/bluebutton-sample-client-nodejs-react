@@ -86,6 +86,20 @@ copy server/src/configs/sample.config.ts -> server/src/configs/config.ts
 yarn --cwd server install
 yarn --cwd server test
 
+## Run selenium tests in docker
+
+Configure the remote target BB2 instance where the tested app is registered (as described above "Running the Back-end & Front-end")
+
+Go to local repo base directory, from there run:
+
+docker-compose -f docker-compose.selenium.yml up --abort-on-container-exit
+
+Note: --abort-on-container-exit will abort client and server containers when selenium tests ends
+
+## Visual trouble shoot
+
+Install VNC viewer and point browser to http://localhost:5900 to monitor web UI interactions
+
 ## Error Responses and handling:
 
 [See ErrorResponses.md](./ErrorResponses.md)
