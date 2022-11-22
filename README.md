@@ -24,12 +24,10 @@ Download and install node. Go to https://nodejs.org/en/download/ and follow the 
 
 Once you have Docker and Node installed and setup then do the following:
 
-    copy server/src/configs/sample.config.ts -> server/src/configs/config.ts
+    cp server/sample-bluebutton-config.json -> server/.bluebutton-config.json
 
 Make sure to replace the clientId and clientSecret variables within the config file with
 the ones you were provided, for your application, when you created your Blue Button Sandbox account.
-
-    copy server/src/pre-start/env/sandbox.sample.env -> server/src/pre-start/env/development.env
 
     docker-compose up -d
 
@@ -66,7 +64,7 @@ To start the sample in native OS (e.g. Linux) with server and client components 
 1. go to the base directory of the repo
 2. run below to start the server:
    1. yarn --cwd server install
-   2. yarn --cwd server start:dev
+   2. yarn --cwd server start
 3. run below to start the client:
    1. yarn --cwd client install
    2. yarn --cwd client start-native
@@ -76,15 +74,6 @@ To stop the sample:
 Both ways of starting the sample are running the sample in foreground, logging and tracing from both client and server components are on stdout of the command window, to stop the sample, press Ctl C, which will terminate both the client and server components.
 
 For client and server started separately in their command window, type Ctrl C respectively
-
-## Run tests
-
-Go to local repo base directory:
-
-copy server/src/configs/sample.config.ts -> server/src/configs/config.ts
-
-yarn --cwd server install
-yarn --cwd server test
 
 ## Run selenium tests in docker
 

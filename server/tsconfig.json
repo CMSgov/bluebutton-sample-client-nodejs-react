@@ -59,29 +59,28 @@
         /* Advanced Options */
         "skipLibCheck": true, /* Skip type checking of declaration files. */
         "forceConsistentCasingInFileNames": true, /* Disallow inconsistently-cased references to the same file. */
-        "paths": {
-            "@daos/*": [
-                "src/daos/*"
-            ],
-            "@entities/*": [
-                "src/entities/*"
-            ],
-            "@shared/*": [
-                "src/shared/*"
-            ],
-            "@configs/*": [
-                "src/configs/*"
-            ],
-            "@server": [
-                "src/Server"
-            ]
-        },
+        // "paths": {
+        //     "@daos/*": [
+        //         "src/daos/*"
+        //     ],
+        //     "@entities/*": [
+        //         "src/entities/*"
+        //     ],
+        //     "@shared/*": [
+        //         "src/shared/*"
+        //     ],
+        //     "@configs/*": [
+        //         "src/configs/*"
+        //     ],
+        //     "@server": [
+        //         "src/Server"
+        //     ]
+        // },
     },
     "include": [
-        "src/**/*.ts",
-        "spec/**/*.ts"
+        "index.ts"
     ],
     "exclude": [
-        "src/public/",
+        // "src/public/",
     ]
 }
