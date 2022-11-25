@@ -26,6 +26,10 @@ Once you have Docker and Node installed and setup then do the following:
 
     cp server/sample-bluebutton-config.json -> server/.bluebutton-config.json
 
+or (if running a docker compose selenium tests)
+
+    cp server/sample-bluebutton-selenium-config.json -> server/.bluebutton-config.json
+
 Make sure to replace the clientId and clientSecret variables within the config file with
 the ones you were provided, for your application, when you created your Blue Button Sandbox account.
 
@@ -74,20 +78,6 @@ To stop the sample:
 Both ways of starting the sample are running the sample in foreground, logging and tracing from both client and server components are on stdout of the command window, to stop the sample, press Ctl C, which will terminate both the client and server components.
 
 For client and server started separately in their command window, type Ctrl C respectively
-
-## Run selenium tests in docker
-
-Configure the remote target BB2 instance where the tested app is registered (as described above "Running the Back-end & Front-end")
-
-Go to local repo base directory, from there run:
-
-docker-compose -f docker-compose.selenium.yml up --abort-on-container-exit
-
-Note: --abort-on-container-exit will abort client and server containers when selenium tests ends
-
-## Visual trouble shoot
-
-Install VNC viewer and point browser to http://localhost:5900 to monitor web UI interactions
 
 ## Error Responses and handling:
 

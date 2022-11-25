@@ -7,6 +7,12 @@ interface User {
     errors?: string[]
 }
 
+const BENE_DENIED_ACCESS = "access_denied"
+const FE_MSG_ACCESS_DENIED = "Beneficiary denied app access to their data"
+const ERR_QUERY_EOB = "Error when querying the patient's EOB!"
+const ERR_MISSING_AUTH_CODE = "Response was missing access code!"
+const ERR_MISSING_STATE = "State is required when using PKCE"
+
 const app = express();
 
 const bb = new BlueButton();
@@ -20,6 +26,12 @@ const authData = bb.generateAuthData();
 const loggedInUser: User = {
 };
 
+// helper to clean up cached eob data
+function clearBB2Data() {
+    loggedInUser.authToken = undefined;
+    loggedInUser.eobData = {};
+}
+  
 // AuthorizationToken holds access grant info:
 // access token, expire in, expire at, token type, scope, refreh token, etc.
 // it is associated with current logged in user in real app,
@@ -35,13 +47,20 @@ app.get("/api/authorize/authurl", (req: Request, res: Response) => {
 // auth flow: oauth2 call back
 app.get("/api/bluebutton/callback", async (req: Request, res: Response) => {
   if (typeof req.query.error === "string") {
-    res.json({ message: req.query.error });
+    // clear all cached claims eob data since the bene has denied access
+    // for the application
+    clearBB2Data();
+    let errMsg = req.query.error;
+    if (req.query.error === BENE_DENIED_ACCESS) {
+        errMsg = FE_MSG_ACCESS_DENIED;
+    }
+    loggedInUser.eobData = {"message": errMsg};
+    process.stdout.write(errMsg + '\n');
   } else {
     if (
       typeof req.query.code === "string" &&
       typeof req.query.state === "string"
     ) {
-    //   let results;
       try {
         authToken = await bb.getAuthorizationToken(
           authData,
@@ -54,64 +73,22 @@ app.get("/api/bluebutton/callback", async (req: Request, res: Response) => {
         // access token can expire, SDK automatically refresh access token when that happens.
         const eobResults = await bb.getExplanationOfBenefitData(authToken);
         authToken = eobResults.token; // in case authToken got refreshed during fhir call
-        // const patientResults = await bb.getPatientData(authToken);
-        // authToken = patientResults.token;
-        // const coverageResults = await bb.getCoverageData(authToken);
-        // authToken = coverageResults.token;
-        // const profileResults = await bb.getProfileData(authToken);
-        // authToken = profileResults.token;
-
-        // nav pages if needed for eob, patient, coverage
-        // client code can preemptively refresh tokens by calling refreshAuthToken(authToken)
-        // console.log(
-        //   "============= preemptively do oauth token refresh before fetch EOB ================="
-        // );
-
-        // console.log("============= authToken =================");
-
-        // authToken = await bb.refreshAuthToken(authToken);
-
-        // console.log(authToken);
 
         loggedInUser.authToken = authToken;
-        // console.log("============= EOB PAGES =================");
 
         loggedInUser.eobData = eobResults.response?.data;
-        // const eobs = await bb.getPages(eobbundle, authToken);
-        // for (let i = 0; i < eobs.pages.length; i++) {
-        //   fs.writeFileSync(`eob_p${i}.json`, JSON.stringify(eobs.pages[i]));
-        // }
-
-        // authToken = eobs.token;
-
-        // console.log("=============PATIENT=================");
-        // const ptbundle = patientResults.response?.data;
-        // const pts = await bb.getPages(ptbundle, authToken);
-        // authToken = pts.token;
-
-        // console.log("=============COVERAGE=================");
-        // const coveragebundle = coverageResults.response?.data;
-        // const coverages = await bb.getPages(coveragebundle, authToken);
-        // authToken = coverages.token;
-
-        // console.log("=============PROFILE=================");
-        // const pfbundle = profileResults.response?.data;
-        // const pfs = await bb.getPages(pfbundle, authToken);
-        // authToken = pfs.token;
-
-        // results = {
-        //   eob: eobs.pages,
-        //   patient: pts.pages,
-        //   coverage: coverages.pages,
-        //   profile: pfs.pages,
-        // };
       } catch (e) {
-        console.log(e);
+        loggedInUser.eobData = {};
+        process.stdout.write(ERR_QUERY_EOB + '\n');
+        process.stdout.write("Exception: " + e + '\n');
       }
-    //   res.json(results);
     } else {
-      //res.json({ message: "Missing AC in callback." });
-      console.log("Missing AC in callback.");
+      clearBB2Data();
+      process.stdout.write(ERR_MISSING_AUTH_CODE + '\n');
+      process.stdout.write("OR" + '\n');
+      process.stdout.write(ERR_MISSING_STATE + '\n');
+      process.stdout.write("AUTH CODE: " + req.query.code + '\n');
+      process.stdout.write("STATE: " + req.query.state + '\n');
     }
   }
   const fe_redirect_url = 
