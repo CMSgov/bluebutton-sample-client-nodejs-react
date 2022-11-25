@@ -45,59 +45,62 @@ app.get("/api/authorize/authurl", (req: Request, res: Response) => {
 });
 
 // auth flow: oauth2 call back
-app.get("/api/bluebutton/callback", async (req: Request, res: Response) => {
-  if (typeof req.query.error === "string") {
-    // clear all cached claims eob data since the bene has denied access
-    // for the application
-    clearBB2Data();
-    let errMsg = req.query.error;
-    if (req.query.error === BENE_DENIED_ACCESS) {
-        errMsg = FE_MSG_ACCESS_DENIED;
-    }
-    loggedInUser.eobData = {"message": errMsg};
-    process.stdout.write(errMsg + '\n');
-  } else {
-    if (
-      typeof req.query.code === "string" &&
-      typeof req.query.state === "string"
-    ) {
-      try {
-        authToken = await bb.getAuthorizationToken(
-          authData,
-          req.query.code,
-          req.query.state
-        );
-        // data flow: after access granted
-        // the app logic can fetch the beneficiary's data in app specific ways:
-        // e.g. download EOB periodically etc.
-        // access token can expire, SDK automatically refresh access token when that happens.
-        const eobResults = await bb.getExplanationOfBenefitData(authToken);
-        authToken = eobResults.token; // in case authToken got refreshed during fhir call
-
-        loggedInUser.authToken = authToken;
-
-        loggedInUser.eobData = eobResults.response?.data;
-      } catch (e) {
-        loggedInUser.eobData = {};
-        process.stdout.write(ERR_QUERY_EOB + '\n');
-        process.stdout.write("Exception: " + e + '\n');
+app.get("/api/bluebutton/callback", (req: Request, res: Response) => {
+    (async (req: Request, res: Response) => {
+        if (typeof req.query.error === "string") {
+          // clear all cached claims eob data since the bene has denied access
+          // for the application
+          clearBB2Data();
+          let errMsg = req.query.error;
+          if (req.query.error === BENE_DENIED_ACCESS) {
+              errMsg = FE_MSG_ACCESS_DENIED;
+          }
+          loggedInUser.eobData = {"message": errMsg};
+          process.stdout.write(errMsg + '\n');
+        } else {
+          if (
+            typeof req.query.code === "string" &&
+            typeof req.query.state === "string"
+          ) {
+            try {
+              authToken = await bb.getAuthorizationToken(
+                authData,
+                req.query.code,
+                req.query.state
+              );
+              // data flow: after access granted
+              // the app logic can fetch the beneficiary's data in app specific ways:
+              // e.g. download EOB periodically etc.
+              // access token can expire, SDK automatically refresh access token when that happens.
+              const eobResults = await bb.getExplanationOfBenefitData(authToken);
+              authToken = eobResults.token; // in case authToken got refreshed during fhir call
+      
+              loggedInUser.authToken = authToken;
+      
+              loggedInUser.eobData = eobResults.response?.data;
+            } catch (e) {
+              loggedInUser.eobData = {};
+              process.stdout.write(ERR_QUERY_EOB + '\n');
+              process.stdout.write("Exception: " + e + '\n');
+            }
+          } else {
+            clearBB2Data();
+            process.stdout.write(ERR_MISSING_AUTH_CODE + '\n');
+            process.stdout.write("OR" + '\n');
+            process.stdout.write(ERR_MISSING_STATE + '\n');
+            process.stdout.write("AUTH CODE: " + req.query.code + '\n');
+            process.stdout.write("STATE: " + req.query.state + '\n');
+          }
+        }
+        const fe_redirect_url = 
+        process.env.SELENIUM_TESTS ? 'http://client:3000' : 'http://localhost:3000';
+        res.redirect(fe_redirect_url);
       }
-    } else {
-      clearBB2Data();
-      process.stdout.write(ERR_MISSING_AUTH_CODE + '\n');
-      process.stdout.write("OR" + '\n');
-      process.stdout.write(ERR_MISSING_STATE + '\n');
-      process.stdout.write("AUTH CODE: " + req.query.code + '\n');
-      process.stdout.write("STATE: " + req.query.state + '\n');
-    }
-  }
-  const fe_redirect_url = 
-  process.env.SELENIUM_TESTS ? 'http://client:3000' : 'http://localhost:3000';
-  res.redirect(fe_redirect_url);
+      )(req, res);
 });
 
 // data flow: front end fetch eob
-app.get("/api/data/benefit", async (req: Request, res: Response) => {
+app.get("/api/data/benefit", (req: Request, res: Response) => {
   if (loggedInUser.eobData) {
     res.json(loggedInUser.eobData);
   }
@@ -105,5 +108,6 @@ app.get("/api/data/benefit", async (req: Request, res: Response) => {
 
 const port = 3001;
 app.listen(port, () => {
-  console.log(`[server]: Server is running at https://localhost:${port}`);
+    process.stdout.write(`[server]: Server is running at https://localhost:${port}`);
+    process.stdout.write("\n");
 });

@@ -5,7 +5,7 @@
     "author": "CMS Blue Button API team",
     "license": "MIT",
     "scripts": {
-        "lint": "eslint --fix --ext .ts --ext .tsx .",
+        "lint": "eslint --fix --ext .ts --ext .tsx index.ts",
         "start": "node ./node_modules/.bin/ts-node -r tsconfig-paths/register .",
         "start:debug": "node --inspect=0.0.0.0:9229 ./node_modules/.bin/ts-node -r tsconfig-paths/register ."
     },
