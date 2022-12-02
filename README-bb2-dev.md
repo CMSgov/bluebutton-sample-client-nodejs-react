@@ -15,6 +15,10 @@ Change your `callbackUrl` configuration to use `server` instead of `localhost`. 
     "callback_url": "http://server:3001/api/bluebutton/callback/"
 ```
 
+You can also start your configuration by the following the sample config template for selenium tests:
+
+cp server/sample-bluebutton-selenium-config.json server/.bluebutton-config.json
+
 You will also need to add this URL to your `redirect_uris` list in your application's configuration on the BB2 Sandbox UI.
 
 Go to local repository base directory and run docker compose as below:

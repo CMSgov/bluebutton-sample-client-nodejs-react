@@ -24,11 +24,7 @@ Download and install node. Go to https://nodejs.org/en/download/ and follow the 
 
 Once you have Docker and Node installed and setup then do the following:
 
-    cp server/sample-bluebutton-config.json -> server/.bluebutton-config.json
-
-or (if running a docker compose selenium tests)
-
-    cp server/sample-bluebutton-selenium-config.json -> server/.bluebutton-config.json
+    cp server/sample-bluebutton-config.json server/.bluebutton-config.json
 
 Make sure to replace the clientId and clientSecret variables within the config file with
 the ones you were provided, for your application, when you created your Blue Button Sandbox account.
