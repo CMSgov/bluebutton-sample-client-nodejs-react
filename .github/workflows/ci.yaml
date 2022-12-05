@@ -21,12 +21,3 @@ jobs:
 
         - name: Lint client source
           run: yarn --cwd client lint
-
-        - name: Copy config
-          run: cp server/src/configs/sample.config.ts server/src/configs/config.ts
-
-        - name: Copy .env
-          run: cp server/src/pre-start/env/sandbox.sample.env server/src/pre-start/env/development.env
-
-        - name: Run server tests
-          run: yarn --cwd server test
