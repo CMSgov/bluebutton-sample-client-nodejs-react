@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "cms-bluebutton-sdk": "file:cms-bluebutton-sdk-v0.1.0.tgz"
+  }
+}
