@@ -1,4 +1,4 @@
-FROM node:18.14-slim
+FROM node:21.5-bookworm-slim
 
 LABEL version="1.0"
 LABEL description="Demo of a Medicare claims data sample app"
