@@ -7,6 +7,11 @@ WORKDIR /server
 
 COPY . . 
 
+# In case machine is Mac M1 chip
+RUN apt-get update
+RUN apt-get install python3 -y
+RUN apt-get install python3-pip -y
+
 RUN yarn install
 
 EXPOSE 3001
