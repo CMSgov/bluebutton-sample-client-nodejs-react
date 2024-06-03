@@ -1,4 +1,4 @@
-FROM node:19.9-slim
+FROM node:20-slim
 
 LABEL version="1.1"
 LABEL description="Demo of a Medicare claims data sample app"
@@ -11,7 +11,7 @@ COPY . .
 RUN apt-get update
 RUN apt-get install python3 -y
 RUN apt-get install python3-pip -y
-
+RUN node --version
 RUN yarn install
 
 EXPOSE 3001
