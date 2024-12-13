@@ -1,5 +1,5 @@
-import express, { Request, Response } from "express";
-import { AuthorizationToken, BlueButton } from "cms-bluebutton-sdk";
+import express, {Request, Response} from "express";
+import {AuthorizationToken, BlueButton} from "cms-bluebutton-sdk";
 import * as fs from "fs";
 
 interface User {
@@ -106,8 +106,16 @@ app.get("/api/bluebutton/loadDefaults", (req: Request, res: Response) => {
 });
 
 // helper to load json data from file
-function loadDataFile(dataset_name: string, resource_file_name: string) {
-    return JSON.parse(fs.readFileSync(`./default_datasets/${dataset_name}/${resource_file_name}.json`, 'utf-8'))
+function loadDataFile(dataset_name: string, resource_file_name: string): any {
+    const filename = `./default_datasets/${dataset_name}/${resource_file_name}.json`
+    const resource = fs.readFileSync(filename, 'utf-8')
+
+    try {
+        return JSON.parse(resource);
+    } catch (error) {
+        console.error("Error parsing JSON:", error);
+        return null
+    }
 }
 
 // data flow: front end fetch eob
