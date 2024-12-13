@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import { AuthorizationToken, BlueButton } from "cms-bluebutton-sdk";
+import * as fs from "fs";
 
 interface User {
     authToken?: AuthorizationToken,
@@ -98,6 +99,16 @@ app.get("/api/bluebutton/callback", (req: Request, res: Response) => {
       }
       )(req, res);
 });
+
+app.get("/api/bluebutton/loadDefaults", (req: Request, res: Response) => {
+    loggedInUser.eobData = loadDataFile("Dataset 1", "eobData");
+    res.send(process.env.SELENIUM_TESTS ? 'http://client:3000' : 'http://localhost:3000');
+});
+
+// helper to load json data from file
+function loadDataFile(dataset_name: string, resource_file_name: string) {
+    return JSON.parse(fs.readFileSync(`./default_datasets/${dataset_name}/${resource_file_name}.json`, 'utf-8'))
+}
 
 // data flow: front end fetch eob
 app.get("/api/data/benefit", (req: Request, res: Response) => {
