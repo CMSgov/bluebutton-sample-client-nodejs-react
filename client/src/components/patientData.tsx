@@ -48,12 +48,12 @@ export default function PatientData() {
                     <h4>{ header }</h4>
                 </div>
                 <div className='ds-u-margin-top--2'>
-                    <Button id="auth_btn" variation="primary" onClick={goAuthorize}>Authorize</Button>
+                    <Button id="auth_btn" variation="solid" onClick={goAuthorize}>Authorize</Button>
                 </div>
                 {
                     settingsState.useDefaultDataButton ?
                     <div className='ds-u-margin-top--2'>
-                        <Button id="load_defaults_btn" variation="primary" onClick={goLoadDefaults}>Load default data</Button>
+                        <Button id="load_defaults_btn" variation="solid" onClick={goLoadDefaults}>Load default data</Button>
                     </div> :
                         null
                 }
