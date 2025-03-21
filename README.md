@@ -73,6 +73,32 @@ To stop the sample:
 
 The sample are running the sample in foreground, logging and tracing from both client and server components are on stdout of the command window, to stop the sample, press Ctl C, which will terminate both the client and server components.
 
+Debugging server component
+--------------------------
+Node remote debugging is enabled on port 9229 for server in docker compose, developer can attach to server from IDE e.g. vscode.
+
+To set up the run config to debug in vscode, add below contents to `.vscode/launch.json`
+```
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "address": "0.0.0.0",
+      "localRoot": "${workspaceFolder}/server",
+      "name": "Attach to Remote",
+      "port": 9229,
+      "remoteRoot": "/server",
+      "request": "attach",
+      "skipFiles": ["<node_internals>/**"],
+      "type": "node"
+    }
+  ]
+}
+```
+
 ## Error Responses and handling:
 
 [See ErrorResponses.md](./ErrorResponses.md)
