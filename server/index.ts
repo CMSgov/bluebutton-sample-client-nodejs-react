@@ -113,7 +113,7 @@ function loadDataFile(dataset_name: string, resource_file_name: string): any {
     try {
         return JSON.parse(resource);
     } catch (error) {
-        process.stdout.write("Error parsing JSON:", error);
+        process.stdout.write("Error parsing JSON: " + error);
         return null
     }
 }
