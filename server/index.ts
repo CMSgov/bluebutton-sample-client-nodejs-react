@@ -47,7 +47,7 @@ app.get("/api/authorize/authurl", (req: Request, res: Response) => {
   // where <v2 scopes> is space delimited v2 scope specs (url encoded)
   // e.g. patient/ExplanationOfBenefit.rs
   const redirectUrl = bb.generateAuthorizeUrl(authData) +
-   "&scope=patient%2FPatient.s%20patient%2FExplanationOfBenefit.rs"
+   "&scope=patient%2FExplanationOfBenefit.rs"
   res.send(redirectUrl);
 });
 
