@@ -1,6 +1,6 @@
 # COMMUNITY.md
 
-bluebutton-sample-client-nodejs-react is supported by a dedicated team of individuals fulfilling various roles to ensure its success, security, and alignment with government standards and agency goals.
+The Blue Button Node Sample Client is supported by a dedicated team of individuals fulfilling various roles to ensure its success, security, and alignment with government standards and agency goals.
 
 ## Project Members
 
@@ -11,13 +11,9 @@ bluebutton-sample-client-nodejs-react is supported by a dedicated team of indivi
 | Maintainer | Brandon Wang | ICF |
 | Maintainer | Connor Lewellyn | Nava PBC |
 
-See [CODEOWNERS.md](.github/CODEOWNERS.md) for a list of those responsible for the code and documentation in this repository.
-
-See [Community Guidelines](#bluebutton-sample-client-nodejs-react-open-source-community-guidelines) on principles and guidelines for participating in this open source project.
-
 ## Roles & Responsibilities
 
-The members of bluebutton-sample-client-nodejs-react community are responsible for guiding its development, ensuring quality standards, and fostering a collaborative environment. They play a vital role in making decisions about code contributions, handling releases, and ensuring the project meets its goals and objectives. Below is a list of the key members and their specific roles and responsibilities. We are eagerly seeking individuals who are interested in joining the community and helping shape and support these roles.
+The members of Blue Button community are responsible for guiding its development, ensuring quality standards, and fostering a collaborative environment. They play a vital role in making decisions about code contributions, handling releases, and ensuring the project meets its goals and objectives. Below is a list of the key members and their specific roles and responsibilities. We are eagerly seeking individuals who are interested in joining the community and helping shape and support these roles.
 
 ### Maintainers:
 
@@ -28,7 +24,17 @@ The members of bluebutton-sample-client-nodejs-react community are responsible f
 
 ### Approvers:
 
+- @jimmyfagan
+- @clewellyn-nava
+- @bwang-icf
+- @stiwarisemanticbits
+
 ### Reviewers:
+
+- @jimmyfagan
+- @clewellyn-nava
+- @bwang-icf
+- @stiwarisemanticbits
 
 | Roles      | Responsibilities                               | Requirements                                                                      | Defined by                                                |
 | ---------- | :--------------------------------------------- | :-------------------------------------------------------------------------------- | :-------------------------------------------------------- |
@@ -52,9 +58,9 @@ Total number of contributors: <!--CONTRIBUTOR COUNT START--> <!--CONTRIBUTOR COU
 We'd like to acknowledge the following individuals for their past contributions of this project:
 
 
-## bluebutton-sample-client-nodejs-react Open Source Community Guidelines
+## Blue Button Open Source Community Guidelines
 
-This document contains principles and guidelines for participating in the bluebutton-sample-client-nodejs-react open source community.
+This document contains principles and guidelines for participating in the Blue Button open source community.
 
 ### Principles
 
@@ -74,7 +80,7 @@ All community members are expected to adhere to our [Code of Conduct](CODE_OF_CO
 
 Information on contributing to this repository is available in our [Contributing file](CONTRIBUTING.md).
 
-When participating in bluebutton-sample-client-nodejs-react open source community conversations and spaces, we ask individuals to follow the following guidelines:
+When participating in Blue Button open source community conversations and spaces, we ask individuals to follow the following guidelines:
 
 - When joining a conversation for the first time, please introduce yourself by providing a brief intro that includes:
   - your related organization (if applicable)
