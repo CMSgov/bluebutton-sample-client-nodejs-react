@@ -11,7 +11,7 @@ contributions.
 We encourage you to read this project's CONTRIBUTING policy (you are here), its
 [LICENSE](LICENSE.md), and its [README](README.md).
 
-### Workflow and Branhing
+### Workflow and Branching
 
 We follow standard GitHub Flow practices:
 
