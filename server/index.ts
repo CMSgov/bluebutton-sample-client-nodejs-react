@@ -88,15 +88,15 @@ app.get("/api/bluebutton/callback", (req: Request, res: Response) => {
             } catch (e) {
               loggedInUser.eobData = {};
               process.stdout.write(ERR_QUERY_EOB + '\n');
-              process.stdout.write("Exception: " + e + '\n');
+              process.stderr.write("Exception: " + String(e) + '\n');
             }
           } else {
             clearBB2Data();
             process.stdout.write(ERR_MISSING_AUTH_CODE + '\n');
             process.stdout.write("OR" + '\n');
             process.stdout.write(ERR_MISSING_STATE + '\n');
-            process.stdout.write("AUTH CODE: " + req.query.code + '\n');
-            process.stdout.write("STATE: " + req.query.state + '\n');
+            process.stdout.write("AUTH CODE: " + JSON.stringify(req.query.code) + '\n');
+            process.stdout.write("STATE: " + JSON.stringify(req.query.state) + '\n');
           }
         }
         const fe_redirect_url = 
@@ -116,12 +116,12 @@ function loadDataFile(dataset_name: string, resource_file_name: string): any {
     const filename = `./default_datasets/${dataset_name}/${resource_file_name}.json`
     const resource = fs.readFileSync(filename, 'utf-8')
 
-    try {
-        return JSON.parse(resource);
-    } catch (error) {
-        process.stdout.write("Error parsing JSON: " + error);
-        return null
-    }
+  try {
+    return JSON.parse(resource);
+  } catch (error) {
+    process.stderr.write("Error parsing JSON: " + String(error) + '\n');
+    return null
+  }
 }
 
 // data flow: front end fetch eob
