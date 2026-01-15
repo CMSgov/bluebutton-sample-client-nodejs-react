@@ -45,9 +45,11 @@ app.get("/api/authorize/authurl", (req: Request, res: Response) => {
   // for SMART App v2 scopes usage: explicitly
   // provide query parameter scope=<v2 scopes>
   // where <v2 scopes> is space delimited v2 scope specs (url encoded)
-  // e.g. patient/ExplanationOfBenefit.rs
+  // e.g. patient/ExplanationOfBenefit.read
+  console.log("bb.version:", bb.version);
   const redirectUrl = bb.generateAuthorizeUrl(authData) +
-   "&scope=patient%2FExplanationOfBenefit.rs"
+   "&scope=patient%2FExplanationOfBenefit.read"
+  console.log("redirectUrl:", redirectUrl);
   res.send(redirectUrl);
 });
 
@@ -75,20 +77,29 @@ app.get("/api/bluebutton/callback", (req: Request, res: Response) => {
                 req.query.code,
                 req.query.state
               );
+              console.log("Auth Token Scope:", authToken.scope);
               // data flow: after access granted
               // the app logic can fetch the beneficiary's data in app specific ways:
               // e.g. download EOB periodically etc.
               // access token can expire, SDK automatically refresh access token when that happens.
               const eobResults = await bb.getExplanationOfBenefitData(authToken);
+              process.stdout.write("EOB Results: " + JSON.stringify(eobResults) + '\n');
+              console.log("EOB Results: ", eobResults);
               authToken = eobResults.token; // in case authToken got refreshed during fhir call
-      
+              process.stdout.write("Refreshed Auth Token: " + JSON.stringify(authToken) + '\n');
+              console.log("Refreshed Auth Token: ", authToken);
+
               loggedInUser.authToken = authToken;
       
               loggedInUser.eobData = eobResults.response?.data;
-            } catch (e) {
+            } catch (e: any) {
               loggedInUser.eobData = {};
               process.stdout.write(ERR_QUERY_EOB + '\n');
               process.stderr.write("Exception: " + String(e) + '\n');
+              if (e.response) {
+                console.log("Error status:", e.response.status);
+                console.log("Error data:", e.response.data);
+              }
             }
           } else {
             clearBB2Data();
