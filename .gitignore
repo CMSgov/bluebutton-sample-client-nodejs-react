@@ -19,7 +19,6 @@ yarn-debug.log*
 yarn-error.log*
 
 server/yarn.lock
-server/node-sdk
 
 .vscode
 .idea
