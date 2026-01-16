@@ -45,10 +45,9 @@ app.get("/api/authorize/authurl", (req: Request, res: Response) => {
   // for SMART App v2 scopes usage: explicitly
   // provide query parameter scope=<v2 scopes>
   // where <v2 scopes> is space delimited v2 scope specs (url encoded)
-  // e.g. patient/ExplanationOfBenefit.read
-  console.log("bb.version:", bb.version);
+  // e.g. patient/ExplanationOfBenefit.rs
   const redirectUrl = bb.generateAuthorizeUrl(authData) +
-   "&scope=patient%2FExplanationOfBenefit.read"
+   "&scope=patient%2FExplanationOfBenefit.rs"
   console.log("redirectUrl:", redirectUrl);
   res.send(redirectUrl);
 });

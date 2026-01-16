@@ -3,6 +3,7 @@ node_modules
 
 # build trash
 server/dist
+server/node-sdk
 
 # testing
 coverage
