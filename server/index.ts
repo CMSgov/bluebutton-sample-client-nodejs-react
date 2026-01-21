@@ -48,7 +48,6 @@ app.get("/api/authorize/authurl", (req: Request, res: Response) => {
   // e.g. patient/ExplanationOfBenefit.rs
   const redirectUrl = bb.generateAuthorizeUrl(authData) +
    "&scope=patient%2FExplanationOfBenefit.rs"
-  console.log("redirectUrl:", redirectUrl);
   res.send(redirectUrl);
 });
 
@@ -76,17 +75,12 @@ app.get("/api/bluebutton/callback", (req: Request, res: Response) => {
                 req.query.code,
                 req.query.state
               );
-              console.log("Auth Token Scope:", authToken.scope);
               // data flow: after access granted
               // the app logic can fetch the beneficiary's data in app specific ways:
               // e.g. download EOB periodically etc.
               // access token can expire, SDK automatically refresh access token when that happens.
               const eobResults = await bb.getExplanationOfBenefitData(authToken);
-              process.stdout.write("EOB Results: " + JSON.stringify(eobResults) + '\n');
-              console.log("EOB Results: ", eobResults);
               authToken = eobResults.token; // in case authToken got refreshed during fhir call
-              process.stdout.write("Refreshed Auth Token: " + JSON.stringify(authToken) + '\n');
-              console.log("Refreshed Auth Token: ", authToken);
 
               loggedInUser.authToken = authToken;
       
