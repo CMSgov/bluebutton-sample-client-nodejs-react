@@ -3,6 +3,7 @@ node_modules
 
 # build trash
 server/dist
+server/node-sdk
 
 # testing
 coverage
@@ -30,4 +31,8 @@ sandbox.env
 
 config.ts
 .bluebutton-config.json
-client/yarn.lock
+package-lock.json
+yarn.lock
+
+# Snyk Security Extension - AI Rules (auto-generated)
+.github/instructions/snyk_rules.instructions.md

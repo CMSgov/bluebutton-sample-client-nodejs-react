@@ -81,14 +81,18 @@ app.get("/api/bluebutton/callback", (req: Request, res: Response) => {
               // access token can expire, SDK automatically refresh access token when that happens.
               const eobResults = await bb.getExplanationOfBenefitData(authToken);
               authToken = eobResults.token; // in case authToken got refreshed during fhir call
-      
+
               loggedInUser.authToken = authToken;
       
               loggedInUser.eobData = eobResults.response?.data;
-            } catch (e) {
+            } catch (e: any) {
               loggedInUser.eobData = {};
               process.stdout.write(ERR_QUERY_EOB + '\n');
               process.stderr.write("Exception: " + String(e) + '\n');
+              if (e.response) {
+                console.log("Error status:", e.response.status);
+                console.log("Error data:", e.response.data);
+              }
             }
           } else {
             clearBB2Data();
