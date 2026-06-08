@@ -30,7 +30,7 @@ production.env
 sandbox.env
 
 config.ts
-.bluebutton-config.json
+**/.bluebutton-config.json
 package-lock.json
 yarn.lock
 
