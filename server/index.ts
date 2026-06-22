@@ -34,7 +34,7 @@ function clearBB2Data() {
 }
   
 // AuthorizationToken holds access grant info:
-// access token, expire in, expire at, token type, scope, refreh token, etc.
+// access token, expire in, expire at, token type, scope, refresh token, etc.
 // it is associated with current logged in user in real app,
 // check SDK js docs for more details.
 

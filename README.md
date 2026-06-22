@@ -2,7 +2,7 @@ BlueButton Sample Node Client Application
 =====================================================
 
 ## Project Description
-A sample applciation, written in NodeJS utilizing the Node SDK to connect to BlueButton.
+A sample application, written in NodeJS utilizing the Node SDK to connect to BlueButton.
 
 ## About the Project
 The [Blue Button 2.0 API](https://bluebutton.cms.gov/) provides Medicare enrollee claims data to applications using the [OAuth2.0 authorization flow](https://datatracker.ietf.org/doc/html/rfc6749). We aim to provide a developer-friendly, standards-based API that enables people with Medicare to connect their claims data to the applications, services, and research programs they trust.
@@ -29,7 +29,7 @@ The following guide is for members of the project team who have access to the re
 ### Create a Blue Button Sandbox Account
 Create an account at the link below, and register your test application, to get your Blue Button Sandbox Credentials which will allow you to
 access the Blue Button synthetic data. These credentials will be necessary to run this sample application as well as
-utilize the Blue Button data within your own applcation. See the section below 'Running the Back-end & Front-end'.
+utilize the Blue Button data within your own application. See the section below 'Running the Back-end & Front-end'.
 
 https://sandbox.bluebutton.cms.gov/v1/accounts/create
 
