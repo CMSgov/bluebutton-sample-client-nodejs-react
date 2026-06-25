@@ -8,7 +8,7 @@ WORKDIR /server
 COPY . . 
 
 RUN apt-get update && \
-    apt-get install -y libgnutls30=3.7.9-2+deb12u7
+    apt-get install -y libgnutls30 libcap2
 
 # In case machine is Mac M1 chip
 RUN node --version
