@@ -12,7 +12,7 @@ WORKDIR /client
 COPY . .
 
 RUN apt-get update && \
-    apt-get install -y libcap2
+    apt-get install -y libgnutls30 libcap2
 
 # In case machine is Mac M1 chip
 RUN node --version

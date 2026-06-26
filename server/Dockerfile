@@ -1,4 +1,4 @@
-FROM node:20-slim
+FROM node:22.22.2-trixie-slim
 
 LABEL version="1.1"
 LABEL description="Demo of a Medicare claims data sample app"
@@ -8,7 +8,7 @@ WORKDIR /server
 COPY . . 
 
 RUN apt-get update && \
-    apt-get install -y libgnutls30
+    apt-get install -y libgnutls30 libcap2
 
 # In case machine is Mac M1 chip
 RUN node --version
