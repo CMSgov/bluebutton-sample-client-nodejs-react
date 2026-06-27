@@ -54,6 +54,13 @@ Total number of contributors: <!--CONTRIBUTOR COUNT START--> <!--CONTRIBUTOR COU
 	<tbody>
 		<tr>
             <td align="center">
+                <a href="https://github.com/bwang-icf">
+                    <img src="https://avatars.githubusercontent.com/u/178809349?v=4" width="100;" alt="bwang-icf"/>
+                    <br />
+                    <sub><b>bwang-icf</b></sub>
+                </a>
+            </td>
+            <td align="center">
                 <a href="https://github.com/JFU-NAVA-PBC">
                     <img src="https://avatars.githubusercontent.com/u/135686833?v=4" width="100;" alt="JFU-NAVA-PBC"/>
                     <br />
@@ -75,10 +82,10 @@ Total number of contributors: <!--CONTRIBUTOR COUNT START--> <!--CONTRIBUTOR COU
                 </a>
             </td>
             <td align="center">
-                <a href="https://github.com/jimmyfagan">
-                    <img src="https://avatars.githubusercontent.com/u/90421499?v=4" width="100;" alt="jimmyfagan"/>
+                <a href="https://github.com/JamesDemeryNava">
+                    <img src="https://avatars.githubusercontent.com/u/226581456?v=4" width="100;" alt="JamesDemeryNava"/>
                     <br />
-                    <sub><b>jimmyfagan</b></sub>
+                    <sub><b>James Demery</b></sub>
                 </a>
             </td>
             <td align="center">
@@ -88,6 +95,22 @@ Total number of contributors: <!--CONTRIBUTOR COUNT START--> <!--CONTRIBUTOR COU
                     <sub><b>Brady Fausett</b></sub>
                 </a>
             </td>
+		</tr>
+		<tr>
+            <td align="center">
+                <a href="https://github.com/ryan-morosa">
+                    <img src="https://avatars.githubusercontent.com/u/253099523?v=4" width="100;" alt="ryan-morosa"/>
+                    <br />
+                    <sub><b>ryan-morosa</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/jimmyfagan">
+                    <img src="https://avatars.githubusercontent.com/u/90421499?v=4" width="100;" alt="jimmyfagan"/>
+                    <br />
+                    <sub><b>jimmyfagan</b></sub>
+                </a>
+            </td>
             <td align="center">
                 <a href="https://github.com/dtisza1">
                     <img src="https://avatars.githubusercontent.com/u/36048547?v=4" width="100;" alt="dtisza1"/>
@@ -95,27 +118,11 @@ Total number of contributors: <!--CONTRIBUTOR COUNT START--> <!--CONTRIBUTOR COU
                     <sub><b>David Tisza</b></sub>
                 </a>
             </td>
-		</tr>
-		<tr>
             <td align="center">
                 <a href="https://github.com/stiwarisemanticbits">
                     <img src="https://avatars.githubusercontent.com/u/57143602?v=4" width="100;" alt="stiwarisemanticbits"/>
                     <br />
                     <sub><b>Shivam Tiwari</b></sub>
-                </a>
-            </td>
-            <td align="center">
-                <a href="https://github.com/bwang-icf">
-                    <img src="https://avatars.githubusercontent.com/u/178809349?v=4" width="100;" alt="bwang-icf"/>
-                    <br />
-                    <sub><b>bwang-icf</b></sub>
-                </a>
-            </td>
-            <td align="center">
-                <a href="https://github.com/JamesDemeryNava">
-                    <img src="https://avatars.githubusercontent.com/u/226581456?v=4" width="100;" alt="JamesDemeryNava"/>
-                    <br />
-                    <sub><b>James Demery</b></sub>
                 </a>
             </td>
             <td align="center">
@@ -132,6 +139,8 @@ Total number of contributors: <!--CONTRIBUTOR COUNT START--> <!--CONTRIBUTOR COU
                     <sub><b>sb-benohe</b></sub>
                 </a>
             </td>
+		</tr>
+		<tr>
             <td align="center">
                 <a href="https://github.com/snyk-bot">
                     <img src="https://avatars.githubusercontent.com/u/19733683?v=4" width="100;" alt="snyk-bot"/>
@@ -139,8 +148,6 @@ Total number of contributors: <!--CONTRIBUTOR COUNT START--> <!--CONTRIBUTOR COU
                     <sub><b>Snyk bot</b></sub>
                 </a>
             </td>
-		</tr>
-		<tr>
             <td align="center">
                 <a href="https://github.com/clewellyn-nava">
                     <img src="https://avatars.githubusercontent.com/u/224594471?v=4" width="100;" alt="clewellyn-nava"/>
