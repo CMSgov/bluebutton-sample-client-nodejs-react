@@ -1,4 +1,4 @@
-FROM node:22.22.2-trixie-slim
+FROM node:24-trixie-slim
 
 LABEL version="1.1"
 LABEL description="Demo of a Medicare claims data sample app"
