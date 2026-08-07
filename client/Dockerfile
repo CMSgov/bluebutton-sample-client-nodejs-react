@@ -1,4 +1,4 @@
-FROM node:24-trixie-slim
+FROM node:26.7-trixie-slim
 
 ARG BB2-APP_LAUNCH
 
@@ -13,6 +13,8 @@ COPY . .
 
 RUN apt-get update && \
     apt-get install -y libgnutls30 libcap2 libssh2-1
+
+RUN npm install -g yarn
 
 # In case machine is Mac M1 chip
 RUN node --version
