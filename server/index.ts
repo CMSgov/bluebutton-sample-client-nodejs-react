@@ -5,12 +5,14 @@ import * as fs from "fs";
 interface User {
     authToken?: AuthorizationToken,
     eobData?: any,
+    insuranceCardData?: any,
     errors?: string[]
 }
 
 const BENE_DENIED_ACCESS = "access_denied"
 const FE_MSG_ACCESS_DENIED = "Beneficiary denied app access to their data"
 const ERR_QUERY_EOB = "Error when querying the patient's EOB!"
+const ERR_QUERY_INSURANCE_CARD = "Error when querying the patient's digital insurance card!"
 const ERR_MISSING_AUTH_CODE = "Response was missing access code!"
 const ERR_MISSING_STATE = "State is required when using PKCE"
 
@@ -31,6 +33,7 @@ const loggedInUser: User = {
 function clearBB2Data() {
     loggedInUser.authToken = undefined;
     loggedInUser.eobData = {};
+    loggedInUser.insuranceCardData = {};
 }
   
 // AuthorizationToken holds access grant info:
@@ -47,7 +50,7 @@ app.get("/api/authorize/authurl", (req: Request, res: Response) => {
   // where <v2 scopes> is space delimited v2 scope specs (url encoded)
   // e.g. patient/ExplanationOfBenefit.rs
   const redirectUrl = bb.generateAuthorizeUrl(authData) +
-   "&scope=patient%2FExplanationOfBenefit.rs"
+   "&scope=patient%2FExplanationOfBenefit.rs%20patient%2FPatient.rs%20patient%2FCoverage.rs"
   res.send(redirectUrl);
 });
 
@@ -94,6 +97,39 @@ app.get("/api/bluebutton/callback", (req: Request, res: Response) => {
                 console.log("Error data:", e.response.data);
               }
             }
+
+            try {
+              // data flow: call the $generate-digital-insurance-card operation to get the
+              // beneficiary's CARIN Digital Insurance Card (C4DIC) FHIR bundle.
+              // This operation is only available on BB2 v3.
+              const insuranceCardResults = await bb.getInsuranceCardData(authToken);
+              authToken = insuranceCardResults.token; // in case authToken got refreshed
+
+              loggedInUser.authToken = authToken;
+
+              // the SDK does not throw on HTTP error responses (e.g. missing scope, 404),
+              // it resolves with the error body in response.data, so check status here
+              const status = insuranceCardResults.response?.status;
+              if (status && status >= 200 && status < 300) {
+                loggedInUser.insuranceCardData = insuranceCardResults.response?.data;
+              } else {
+                process.stdout.write(ERR_QUERY_INSURANCE_CARD + '\n');
+                process.stdout.write("Insurance card response status: " + String(status) + '\n');
+                process.stdout.write(
+                  "Insurance card response data: " +
+                  JSON.stringify(insuranceCardResults.response?.data) + '\n'
+                );
+                loggedInUser.insuranceCardData = {"message": ERR_QUERY_INSURANCE_CARD};
+              }
+            } catch (e: any) {
+              loggedInUser.insuranceCardData = {"message": ERR_QUERY_INSURANCE_CARD};
+              process.stdout.write(ERR_QUERY_INSURANCE_CARD + '\n');
+              process.stderr.write("Exception: " + String(e) + '\n');
+              if (e.response) {
+                console.log("Error status:", e.response.status);
+                console.log("Error data:", e.response.data);
+              }
+            }
           } else {
             clearBB2Data();
             process.stdout.write(ERR_MISSING_AUTH_CODE + '\n');
@@ -132,6 +168,13 @@ function loadDataFile(dataset_name: string, resource_file_name: string): any {
 app.get("/api/data/benefit", (req: Request, res: Response) => {
   if (loggedInUser.eobData) {
     res.json(loggedInUser.eobData);
+  }
+});
+
+// data flow: front end fetch the digital insurance card ($generate-digital-insurance-card)
+app.get("/api/data/insurancecard", (req: Request, res: Response) => {
+  if (loggedInUser.insuranceCardData) {
+    res.json(loggedInUser.insuranceCardData);
   }
 });
 
