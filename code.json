@@ -1,6 +1,6 @@
 {
   "name": "bluebutton-sample-client-nodejs-react",
-  "description": "A sample applciation, written in NodeJS utilizing the Node SDK to connect to BlueButton.",
+  "description": "A sample application, written in NodeJS utilizing the Node SDK to connect to BlueButton.",
   "status": "Production",
   "permissions": {
     "licenses": [
