@@ -1,4 +1,4 @@
-FROM node:26.9.0-alpine3.24
+FROM node:26.7.0-alpine3.24
 
 LABEL version="1.1"
 LABEL description="Demo of a Medicare claims data sample app"
