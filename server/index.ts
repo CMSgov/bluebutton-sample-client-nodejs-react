@@ -102,7 +102,7 @@ app.get("/api/bluebutton/callback", (req: Request, res: Response) => {
               // data flow: call the $generate-digital-insurance-card operation to get the
               // beneficiary's CARIN Digital Insurance Card (C4DIC) FHIR bundle.
               // This operation is only available on BB2 v3.
-              const insuranceCardResults = await bb.getInsuranceCardData(authToken);
+              const insuranceCardResults = await (bb as any).getInsuranceCardData(authToken);
               authToken = insuranceCardResults.token; // in case authToken got refreshed
 
               loggedInUser.authToken = authToken;

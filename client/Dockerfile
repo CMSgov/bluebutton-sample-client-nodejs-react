@@ -1,4 +1,4 @@
-FROM node:26.7-trixie-slim
+FROM node:26.7.0-alpine3.24
 
 ARG BB2-APP_LAUNCH
 
@@ -11,8 +11,8 @@ WORKDIR /client
 
 COPY . .
 
-RUN apt-get update && \
-    apt-get install -y libgnutls30 libcap2 libssh2-1
+RUN apk update && \
+    apk add --no-cache gnutls libcap libssh2
 
 RUN npm install -g yarn
 
