@@ -36,3 +36,6 @@ yarn.lock
 
 # Snyk Security Extension - AI Rules (auto-generated)
 .github/instructions/snyk_rules.instructions.md
+
+# venv. This is for pre-commit and not for the code itself
+venv/
