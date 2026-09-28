@@ -18,8 +18,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-server/yarn.lock
-
 .vscode
 .idea
 
@@ -31,8 +29,9 @@ sandbox.env
 
 config.ts
 .bluebutton-config.json
-package-lock.json
-yarn.lock
 
 # Snyk Security Extension - AI Rules (auto-generated)
 .github/instructions/snyk_rules.instructions.md
+
+# venv. This is for pre-commit and not for the code itself
+venv/
