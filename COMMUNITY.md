@@ -75,6 +75,13 @@ Total number of contributors: <!--CONTRIBUTOR COUNT START--> <!--CONTRIBUTOR COU
                 </a>
             </td>
             <td align="center">
+                <a href="https://github.com/ryan-morosa">
+                    <img src="https://avatars.githubusercontent.com/u/253099523?v=4" width="100;" alt="ryan-morosa"/>
+                    <br />
+                    <sub><b>ryan-morosa</b></sub>
+                </a>
+            </td>
+            <td align="center">
                 <a href="https://github.com/JFU-GIT">
                     <img src="https://avatars.githubusercontent.com/u/25412191?v=4" width="100;" alt="JFU-GIT"/>
                     <br />
@@ -88,15 +95,15 @@ Total number of contributors: <!--CONTRIBUTOR COUNT START--> <!--CONTRIBUTOR COU
                     <sub><b>Don Seymour</b></sub>
                 </a>
             </td>
-            <td align="center">
-                <a href="https://github.com/ryan-morosa">
-                    <img src="https://avatars.githubusercontent.com/u/253099523?v=4" width="100;" alt="ryan-morosa"/>
-                    <br />
-                    <sub><b>ryan-morosa</b></sub>
-                </a>
-            </td>
 		</tr>
 		<tr>
+            <td align="center">
+                <a href="https://github.com/annamontare-nava">
+                    <img src="https://avatars.githubusercontent.com/u/267455234?v=4" width="100;" alt="annamontare-nava"/>
+                    <br />
+                    <sub><b>annamontare-nava</b></sub>
+                </a>
+            </td>
             <td align="center">
                 <a href="https://github.com/jimmyfagan">
                     <img src="https://avatars.githubusercontent.com/u/90421499?v=4" width="100;" alt="jimmyfagan"/>
@@ -132,6 +139,8 @@ Total number of contributors: <!--CONTRIBUTOR COUNT START--> <!--CONTRIBUTOR COU
                     <sub><b>Sharon Su</b></sub>
                 </a>
             </td>
+		</tr>
+		<tr>
             <td align="center">
                 <a href="https://github.com/sb-benohe">
                     <img src="https://avatars.githubusercontent.com/u/71290292?v=4" width="100;" alt="sb-benohe"/>
@@ -139,8 +148,6 @@ Total number of contributors: <!--CONTRIBUTOR COUNT START--> <!--CONTRIBUTOR COU
                     <sub><b>sb-benohe</b></sub>
                 </a>
             </td>
-		</tr>
-		<tr>
             <td align="center">
                 <a href="https://github.com/snyk-bot">
                     <img src="https://avatars.githubusercontent.com/u/19733683?v=4" width="100;" alt="snyk-bot"/>
