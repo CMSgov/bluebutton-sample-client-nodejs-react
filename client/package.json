@@ -69,6 +69,6 @@
   "resolutions": {
     "@types/react": "^17.0.2",
     "@types/node": "^22.0.0",
-    "@vitest/istanbul-lib-coverage": "1.0.0"
+    "@vitest/istanbul-lib-coverage": "^2.0.0"
   }
 }
