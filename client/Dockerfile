@@ -12,7 +12,7 @@ WORKDIR /client
 COPY . .
 
 RUN apk update && \
-    apk add --no-cache gnutls libcap libssh2
+    apk add --no-cache gnutls libcap libssh2 zlib=1.3.2-r1 
 
 RUN npm install -g yarn
 
